@@ -53,6 +53,17 @@ repos:
         args: [--baseline, .secrets.baseline]
         exclude: package-lock.json
 
+  # Custom local hooks
+  - repo: local
+    hooks:
+      # Check for print() statements (should use logger instead)
+      - id: check-print-statements
+        name: Check for print() statements
+        entry: bash -c 'if grep -r "print(" app/ --include="*.py" --exclude-dir=__pycache__; then echo "❌ Found print() statements. Use logger instead!"; exit 1; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
 # Default language version
 default_language_version:
   python: python3.13
