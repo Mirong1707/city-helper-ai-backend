@@ -14,7 +14,6 @@ FROM python:3.13-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH=/root/.local/bin:$PATH \
     APP_ENV=production
 
 # Create app user (security best practice)
@@ -23,8 +22,8 @@ RUN useradd -m -u 1000 appuser
 # Set working directory
 WORKDIR /app
 
-# Copy dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Copy dependencies from builder to system Python
+COPY --from=builder /root/.local /usr/local
 
 # Copy application code
 COPY --chown=appuser:appuser app/ ./app/

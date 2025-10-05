@@ -35,26 +35,30 @@ def configure_logging():
         - "session" in URL paths (it's just an endpoint name)
         - "token" in field names (only values)
         """
-        pattern = match.pattern.lower()
+        # Get the path to the field (e.g., ('attributes', 'password'))
         path_parts = [str(p).lower() for p in match.path]
 
-        # If this is a URL path - don't hide "session"
-        if "path" in path_parts and "session" in pattern:
+        # Get the field name (last part of path)
+        field_name = path_parts[-1] if path_parts else ""
+
+        # Get the value being checked
+        value_str = str(match.value).lower() if match.value else ""
+
+        # If this is a URL path containing "session" - don't hide it
+        if "path" in path_parts and "session" in value_str:
             return None  # Don't scrub
 
+        # Check field name for sensitive patterns
         # Hide passwords everywhere
-        if any(p in pattern for p in ["password", "passwd", "pwd"]):
+        if any(keyword in field_name for keyword in ["password", "passwd", "pwd"]):
             return "[REDACTED]"
 
         # Hide secrets and API keys everywhere
-        if any(p in pattern for p in ["secret", "api_key", "apikey"]):
+        if any(keyword in field_name for keyword in ["secret", "api_key", "apikey", "token"]):
             return "[REDACTED]"
 
-        # Hide tokens and authorization (but not in path names)
-        if (
-            any(p in pattern for p in ["token", "authorization", "bearer"])
-            and "path" not in path_parts
-        ):
+        # Hide authorization headers
+        if "authorization" in field_name or "bearer" in field_name:
             return "[REDACTED]"
 
         # Leave everything else as is
