@@ -135,8 +135,8 @@ jobs:
       - name: Run Bandit (security linter)
         run: |
           echo "🔒 Running security checks..."
-          bandit -r app/ -ll -f json -o bandit-report.json || true
-          bandit -r app/ -ll
+          bandit -r app/ -lll -f json -o bandit-report.json || true
+          bandit -r app/ -lll
 
       - name: Run Safety (dependency vulnerabilities)
         run: |

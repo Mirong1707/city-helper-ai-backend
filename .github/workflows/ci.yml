@@ -74,7 +74,7 @@ jobs:
           pip install bandit[toml] safety
 
       - name: Run Bandit (security linter)
-        run: bandit -r app/ -f json -o bandit-report.json || true
+        run: bandit -r app/ -lll -f json -o bandit-report.json || true
 
       - name: Run Safety (dependency vulnerability check)
         run: safety check --json || true
