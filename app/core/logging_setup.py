@@ -32,21 +32,15 @@ def configure_logging():
         - token/authorization in headers and body
 
         Does NOT hide:
-        - "session" in URL paths (it's just an endpoint name)
-        - "token" in field names (only values)
+        - "session" anywhere (it's just an endpoint name, not a secret)
         """
-        # Get the path to the field (e.g., ('attributes', 'password'))
+        # If the pattern matched "session", return original value (don't scrub)
+        if match.pattern_match and match.pattern_match.group(0) == "session":
+            return match.value  # Return original value, not None!
+
+        # Get the path to the field
         path_parts = [str(p).lower() for p in match.path]
-
-        # Get the field name (last part of path)
         field_name = path_parts[-1] if path_parts else ""
-
-        # Get the value being checked
-        value_str = str(match.value).lower() if match.value else ""
-
-        # If this is a URL path containing "session" - don't hide it
-        if "path" in path_parts and "session" in value_str:
-            return None  # Don't scrub
 
         # Check field name for sensitive patterns
         # Hide passwords everywhere
@@ -61,17 +55,20 @@ def configure_logging():
         if "authorization" in field_name or "bearer" in field_name:
             return "[REDACTED]"
 
-        # Leave everything else as is
+        # Leave everything else as is (let default patterns handle it)
         return None
 
     logfire.configure(
         send_to_logfire=send_to_logfire,
         token=logfire_token if send_to_logfire else None,
+        advanced=logfire.AdvancedOptions(
+            base_url="https://logfire-eu.pydantic.dev"  # EU region endpoint
+        ),
         environment=settings.environment.value,
         service_name=settings.app_name,
         scrubbing=logfire.ScrubbingOptions(
             callback=smart_scrubbing_callback,
-            extra_patterns=[],  # Use only our custom callback
+            extra_patterns=[],  # Disable built-in patterns that hide "session"
         ),
     )
 
