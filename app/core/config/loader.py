@@ -65,7 +65,7 @@ class Settings:
         from app.core.config import settings
 
         # Access config
-        print(settings.app_name)
+        app_name = settings.app_name
 
         # Access secrets (use get_* methods)
         token = settings.secrets.get_logfire_token()

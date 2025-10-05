@@ -19,7 +19,10 @@ class BaseConfig(BaseSettings):
     )
 
     # Server settings
-    host: str = Field(default="0.0.0.0", description="Server host")
+    host: str = Field(
+        default="0.0.0.0",  # nosec B104 - binding to all interfaces is required for Docker
+        description="Server host",
+    )
     port: int = Field(default=3001, ge=1, le=65535, description="Server port")
     reload: bool = Field(default=False, description="Enable auto-reload (development only)")
 
