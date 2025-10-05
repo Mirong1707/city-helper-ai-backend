@@ -6,7 +6,7 @@ python-multipart==0.0.12
 email-validator==2.2.0
 
 # Logging & Observability
-logfire[fastapi]==2.7.0
+logfire[fastapi]==4.11.0
 structlog==24.4.0
 
 # Configuration & Secrets
