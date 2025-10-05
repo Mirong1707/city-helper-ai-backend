@@ -1,0 +1,85 @@
+[project]
+name = "city-helper-ai-backend"
+version = "1.0.0"
+description = "Mock backend server for City Helper AI"
+requires-python = ">=3.11"
+
+[project.scripts]
+lint = "ruff check app/"
+format = "ruff format app/"
+check = "ruff check app/ && ruff format --check app/"
+
+[tool.ruff]
+# Ruff configuration for City Helper AI Backend
+
+# Python version
+target-version = "py313"
+
+# Line length (consistent with Black)
+line-length = 100
+
+# Enable auto-fixing
+fix = true
+
+# Exclude directories
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    ".ruff_cache",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Enable specific rule sets
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort (import sorting)
+    "N",      # pep8-naming
+    "UP",     # pyupgrade (modern Python syntax)
+    "B",      # flake8-bugbear (find bugs)
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+    "RET",    # flake8-return
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "ERA",    # eradicate (find commented code)
+    "PL",     # pylint
+    "PERF",   # perflint (performance)
+]
+
+# Disable specific rules
+ignore = [
+    "E501",   # Line too long (handled by formatter)
+    "PLR0913", # Too many arguments
+    "PLR2004", # Magic value used in comparison
+]
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Indent with spaces
+indent-style = "space"
+
+# Line ending style
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+# Import sorting configuration
+known-first-party = ["app"]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore specific rules for specific files
+"__init__.py" = ["F401"]  # Unused imports in __init__.py are okay
+"app/schemas/*" = ["N815"]  # Allow camelCase in API schemas (frontend contract)
+"app/api/routes/*" = ["E402", "PLC0415"]  # Allow imports after config & in functions
+"app/core/logging_setup.py" = ["PLC0415"]  # Allow local imports in setup

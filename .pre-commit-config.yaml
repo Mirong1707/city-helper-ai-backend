@@ -1,0 +1,69 @@
+# Pre-commit hooks configuration
+# Runs automatically before each git commit
+
+repos:
+  # Ruff - fast Python linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.3
+    hooks:
+      # Linter
+      - id: ruff
+        args: [--fix]
+        types_or: [python, pyi]
+      # Formatter
+      - id: ruff-format
+        types_or: [python, pyi]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Prevent committing large files
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      # Check for files that would conflict on case-insensitive filesystems
+      - id: check-case-conflict
+      # Check JSON syntax
+      - id: check-json
+      # Check TOML syntax
+      - id: check-toml
+      # Check YAML syntax
+      - id: check-yaml
+        args: [--unsafe]  # Allow custom YAML tags
+      # Detect private keys
+      - id: detect-private-key
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      # Check for merge conflict markers
+      - id: check-merge-conflict
+      # Check that executables have shebangs
+      - id: check-executables-have-shebangs
+      # Fix mixed line endings
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+        exclude: package-lock.json
+
+# Default language version
+default_language_version:
+  python: python3.13
+
+# Files to exclude from all hooks
+exclude: |
+  (?x)^(
+      venv/.*|
+      .venv/.*|
+      .*/__pycache__/.*|
+      .*/\.pytest_cache/.*|
+      .*/\.ruff_cache/.*|
+      .*\.egg-info/.*
+  )$

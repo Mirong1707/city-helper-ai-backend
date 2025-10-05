@@ -1,0 +1,17 @@
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+pydantic==2.9.0
+pydantic-settings==2.5.0
+python-multipart==0.0.12
+email-validator==2.2.0
+
+# Logging & Observability
+logfire[fastapi]==2.7.0
+structlog==24.4.0
+
+# Configuration & Secrets
+python-dotenv==1.0.1
+
+# Development tools
+ruff==0.13.3
+pre-commit==4.3.0
