@@ -44,6 +44,33 @@ make docker-run
 
 Сервер будет доступен на `http://localhost:3001`
 
+---
+
+## 🔄 Git Workflow
+
+**⚠️ ВАЖНО:** Больше НЕ работаем напрямую в `main`!
+
+### Правильный процесс разработки:
+
+```bash
+# 1. Создай feature branch
+git checkout -b feature/your-feature
+
+# 2. Делай изменения и коммить
+git add .
+git commit -m "feat: add something"
+
+# 3. Push в GitHub
+git push origin feature/your-feature
+
+# 4. Создай Pull Request на GitHub
+# ✅ Автоматически запустятся проверки
+
+# 5. После прохождения всех проверок → Merge
+```
+
+**📚 Подробнее:** [WORKFLOW.md](./WORKFLOW.md) — полная инструкция по Git workflow
+
 ## 📁 Структура проекта
 
 ```
@@ -144,14 +171,23 @@ npm run dev:real
 
 ## 📖 Документация
 
-- **[DOCKER.md](./DOCKER.md)** - 🐳 Docker Setup & Deployment
+### Getting Started
+- **[WORKFLOW.md](./WORKFLOW.md)** - 🔄 Git Workflow & Pull Requests (START HERE!)
 - **[LOGFIRE_SETUP.md](./LOGFIRE_SETUP.md)** - ⚡ Быстрая настройка Logfire
+- **[DOCKER.md](./DOCKER.md)** - 🐳 Docker Setup & Deployment
+
+### Development
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Архитектура проекта
+- **[TESTING.md](./TESTING.md)** - Тестирование API
+
+### Configuration & Security
 - **[CONFIGURATION.md](./CONFIGURATION.md)** - Конфигурация и секреты
 - **[SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)** - Security checklist для .env
 - **[LOGGING.md](./LOGGING.md)** - Логирование
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Архитектура проекта
-- **[TESTING.md](./TESTING.md)** - Тестирование API
+
+### CI/CD
 - **[CI_CD.md](./CI_CD.md)** - GitHub Actions CI/CD
+- **[BRANCH_PROTECTION_SETUP.md](./BRANCH_PROTECTION_SETUP.md)** - 🛡️ Настройка защиты main ветки
 
 ## 🏗️ Принципы архитектуры
 

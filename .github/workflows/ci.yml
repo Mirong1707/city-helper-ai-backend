@@ -1,9 +1,9 @@
-name: CI
+name: CI (Main Branch)
 
+# Run ONLY on direct push to main/develop (NOT on PRs)
+# PRs are handled by pr-checks.yml
 on:
   push:
-    branches: [main, master, develop]
-  pull_request:
     branches: [main, master, develop]
   workflow_dispatch:
 
