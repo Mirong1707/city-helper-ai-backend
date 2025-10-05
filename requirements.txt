@@ -10,7 +10,7 @@ logfire[fastapi]==2.7.0
 structlog==24.4.0
 
 # Configuration & Secrets
-python-dotenv==1.0.1
+python-dotenv==1.1.1
 
 # Development tools
 ruff==0.13.3
