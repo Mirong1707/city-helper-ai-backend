@@ -136,7 +136,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false
+          load: true
           tags: city-helper-backend:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -149,7 +149,7 @@ jobs:
             city-helper-backend:test
 
           # Wait for startup
-          sleep 10
+          sleep 15
 
           # Test health endpoint
           curl -f http://localhost:3001/health || exit 1
