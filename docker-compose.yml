@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: city-helper-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - APP_ENV=local
+      - APP_HOST=0.0.0.0
+      - APP_PORT=3001
+      - APP_RELOAD=true
+    volumes:
+      # Mount code for hot reload in development
+      - ./app:/app/app:ro
+      - ./run.py:/app/run.py:ro
+      # Mount .env for local secrets (gitignored)
+      - ./.env/.env:/app/.env/.env:ro
+    networks:
+      - city-helper-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:3001/health')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # PostgreSQL (uncomment when needed)
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: city-helper-postgres
+  #   environment:
+  #     - POSTGRES_DB=cityhelper
+  #     - POSTGRES_USER=cityhelper
+  #     - POSTGRES_PASSWORD=changeme  # Change in production!
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   networks:
+  #     - city-helper-network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U cityhelper"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
+
+  # Redis (uncomment when needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: city-helper-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - city-helper-network
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #   restart: unless-stopped
+
+  # Logfire (uncomment for local observability dashboard)
+  # logfire:
+  #   image: grafana/grafana:latest
+  #   container_name: city-helper-logfire
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   networks:
+  #     - city-helper-network
+  #   restart: unless-stopped
+
+networks:
+  city-helper-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  grafana-data:

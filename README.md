@@ -10,6 +10,8 @@ Mock backend server на FastAPI для разработки и тестиров
 
 ## 🚀 Быстрый старт
 
+### Вариант 1: Локальная разработка (рекомендуется)
+
 ```bash
 # Создайте виртуальное окружение
 python -m venv venv
@@ -29,7 +31,18 @@ cp .env/.env.example .env/.env
 python run.py
 ```
 
-Сервер запустится на `http://localhost:3001`
+### Вариант 2: Docker (production-like)
+
+```bash
+# С Docker Compose (рекомендуется)
+make docker-compose-up
+
+# Или напрямую
+make docker-build
+make docker-run
+```
+
+Сервер будет доступен на `http://localhost:3001`
 
 ## 📁 Структура проекта
 
@@ -131,13 +144,13 @@ npm run dev:real
 
 ## 📖 Документация
 
+- **[DOCKER.md](./DOCKER.md)** - 🐳 Docker Setup & Deployment
 - **[LOGFIRE_SETUP.md](./LOGFIRE_SETUP.md)** - ⚡ Быстрая настройка Logfire
 - **[CONFIGURATION.md](./CONFIGURATION.md)** - Конфигурация и секреты
 - **[SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)** - Security checklist для .env
 - **[LOGGING.md](./LOGGING.md)** - Логирование
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Архитектура проекта
 - **[TESTING.md](./TESTING.md)** - Тестирование API
-- **[PRE_COMMIT.md](./PRE_COMMIT.md)** - Pre-commit Hooks
 - **[CI_CD.md](./CI_CD.md)** - GitHub Actions CI/CD
 
 ## 🏗️ Принципы архитектуры

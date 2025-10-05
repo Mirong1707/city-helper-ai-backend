@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment files (use .env.example instead)
+.env/.env
+.env/.env.*
+!.env/.env.example
+
+# Git
+.git/
+.gitignore
+.github/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# CI/CD
+.pre-commit-config.yaml
+.secrets.baseline
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+build/
+*.egg
+
+# Development
+Makefile
+docker-compose.yml
+Dockerfile
+.dockerignore

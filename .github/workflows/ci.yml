@@ -122,6 +122,42 @@ jobs:
             exit 1
           fi
 
+  docker:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: city-helper-backend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker image
+        run: |
+          docker run -d --name test-backend \
+            -e APP_ENV=local \
+            -p 3001:3001 \
+            city-helper-backend:test
+
+          # Wait for startup
+          sleep 10
+
+          # Test health endpoint
+          curl -f http://localhost:3001/health || exit 1
+
+          # Cleanup
+          docker stop test-backend
+          docker rm test-backend
+
   # Uncomment when tests are added
   # test:
   #   name: Run Tests
