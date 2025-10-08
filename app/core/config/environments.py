@@ -101,7 +101,13 @@ class ProductionConfig(BaseConfig):
     log_level: str = "WARNING"
 
     # Strict CORS for production
-    cors_origins: list[str] = Field(default=["https://cityhelper.ai", "https://www.cityhelper.ai"])
+    cors_origins: list[str] = Field(
+        default=[
+            "https://cityhelper.ai",
+            "https://www.cityhelper.ai",
+            "https://city-helper-ai.vercel.app",
+        ]
+    )
 
     # Production delays
     auth_delay: float = 0.5
