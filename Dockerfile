@@ -16,11 +16,20 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     APP_ENV=production
 
+# Install curl for health checks
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Create app user (security best practice)
 RUN useradd -m -u 1000 appuser
 
 # Set working directory
 WORKDIR /app
+
+# Create logs directory with proper permissions
+RUN mkdir -p logs && chown appuser:appuser logs
 
 # Copy dependencies from builder to system Python
 COPY --from=builder /root/.local /usr/local
@@ -36,9 +45,9 @@ USER appuser
 # Expose port
 EXPOSE 3001
 
-# Health check
+# Health check (using curl instead of Python to avoid extra dependencies)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:3001/health')" || exit 1
+    CMD curl -f http://localhost:3001/health || exit 1
 
 # Run the application
 CMD ["python", "run.py"]
