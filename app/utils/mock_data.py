@@ -13,36 +13,36 @@ class MockDataGenerator:
             Dictionary with checklist structure
         """
         return {
-            "title": "🚀 [BACKEND] Что нужно сделать после переезда",
-            "description": "⚡ Данные с FastAPI сервера! Основные шаги для комфортного обустройства в новом городе",
+            "title": "🚀 [BACKEND] Things to do after moving",
+            "description": "⚡ Data from FastAPI server! Essential steps for comfortable settling in your new city",
             "items": [
                 {
                     "id": "1",
-                    "title": "🎯 Купить местную SIM-карту для мобильной связи",
+                    "title": "🎯 Get a local SIM card for mobile service",
                     "completed": False,
                 },
-                {"id": "2", "title": "💰 Открыть счёт в местном банке", "completed": False},
+                {"id": "2", "title": "💰 Open an account at a local bank", "completed": False},
                 {
                     "id": "3",
-                    "title": "📝 Зарегистрироваться по новому адресу проживания",
+                    "title": "📝 Register at your new residential address",
                     "completed": False,
                 },
                 {
                     "id": "4",
-                    "title": "🌐 Подключить домашний интернет (привет от Python!)",
+                    "title": "🌐 Set up home internet (greetings from Python!)",
                     "completed": False,
                 },
                 {
                     "id": "5",
-                    "title": "🛒 Найти ближайшие продуктовые магазины и аптеки",
+                    "title": "🛒 Find nearby grocery stores and pharmacies",
                     "completed": False,
                 },
                 {
                     "id": "6",
-                    "title": "🚌 Изучить систему общественного транспорта",
+                    "title": "🚌 Learn the public transportation system",
                     "completed": False,
                 },
-                {"id": "7", "title": "🐍 Погладить питона (это бэкенд-шутка)", "completed": False},
+                {"id": "7", "title": "🐍 Pet a python (backend joke)", "completed": False},
             ],
         }
 
@@ -55,40 +55,40 @@ class MockDataGenerator:
             Dictionary with map structure
         """
         return {
-            "title": "🚀 [BACKEND] Прогулка по центру Мюнхена",
-            "description": "⚡ Маршрут создан FastAPI сервером! Пешеходный маршрут на 2 часа с посещением главных достопримечательностей",
-            "duration": "2 часа (+ время на селфи с бэкендом 📸)",
+            "title": "🚀 [BACKEND] Walking tour of Munich center",
+            "description": "⚡ Route created by FastAPI server! 2-hour walking route visiting main attractions",
+            "duration": "2 hours (+ time for selfies with backend 📸)",
             "points": [
                 {
-                    "name": "🏛️ Мариенплац (начало Python-путешествия)",
+                    "name": "🏛️ Marienplatz (start of Python journey)",
                     "googleMapsLink": "https://www.google.com/maps/place/Marienplatz,+München/@48.1374,11.5755,17z",
                 },
                 {
-                    "name": "⛪ Фрауэнкирхе (one API call away)",
+                    "name": "⛪ Frauenkirche (one API call away)",
                     "googleMapsLink": "https://www.google.com/maps/place/Frauenkirche,+München/@48.1386,11.5733,17z",
                 },
                 {
-                    "name": "🌳 Английский сад (brought to you by FastAPI)",
+                    "name": "🌳 English Garden (brought to you by FastAPI)",
                     "googleMapsLink": "https://www.google.com/maps/place/Englischer+Garten,+München/@48.1642,11.6050,15z",
                 },
                 {
-                    "name": "🐍 Секретная точка: Python Cafe (только для backend users)",
+                    "name": "🐍 Secret spot: Python Cafe (backend users only)",
                     "googleMapsLink": "https://www.google.com/maps/place/München/@48.1351,11.5820,17z",
                 },
             ],
             "segments": [
                 {
-                    "from": "🏛️ Мариенплац",
-                    "to": "⛪ Фрауэнкирхе",
+                    "from": "🏛️ Marienplatz",
+                    "to": "⛪ Frauenkirche",
                     "mapUrl": "https://www.google.com/maps?output=embed&q=48.1380,11.5744&z=16",
                 },
                 {
-                    "from": "⛪ Фрауэнкирхе",
-                    "to": "🌳 Английский сад",
+                    "from": "⛪ Frauenkirche",
+                    "to": "🌳 English Garden",
                     "mapUrl": "https://www.google.com/maps?output=embed&q=48.1514,11.5892&z=14",
                 },
                 {
-                    "from": "🌳 Английский сад",
+                    "from": "🌳 English Garden",
                     "to": "🐍 Python Cafe",
                     "mapUrl": "https://www.google.com/maps?output=embed&q=48.1351,11.5820&z=15",
                 },

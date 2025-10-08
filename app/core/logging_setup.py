@@ -1,5 +1,9 @@
 """Logging configuration with structlog + Logfire"""
 
+import logging
+import logging.handlers
+from pathlib import Path
+
 import logfire
 import structlog
 
@@ -72,6 +76,28 @@ def configure_logging():
         ),
     )
 
+    # Setup local file logging ONLY in development (not in production)
+    is_production = settings.environment.value == "production"
+
+    if not is_production:
+        logs_dir = Path("logs")
+        logs_dir.mkdir(exist_ok=True)
+
+        # Rotating file handler: max 10MB per file, keep last 10 files
+        file_handler = logging.handlers.RotatingFileHandler(
+            filename=logs_dir / "backend.log",
+            maxBytes=10 * 1024 * 1024,  # 10 MB
+            backupCount=10,  # Keep last 10 rotated files
+            encoding="utf-8",
+        )
+        file_handler.setLevel(logging.DEBUG)
+
+        # Add file handler to root logger (this catches structlog output)
+        root_logger = logging.getLogger()
+        root_logger.addHandler(file_handler)
+        root_logger.setLevel(logging.DEBUG)
+
+    # Configure structlog to write to stdout (and Logfire if enabled)
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,  # merge request-bound context

@@ -6,77 +6,77 @@
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 
-Mock backend server на FastAPI для разработки и тестирования фронтенда.
+AI-powered backend service built with FastAPI for discovering places and planning routes in any city.
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### Вариант 1: Локальная разработка (рекомендуется)
+### Option 1: Local Development (Recommended)
 
 ```bash
-# Создайте виртуальное окружение
+# Create virtual environment
 python -m venv venv
 
-# Активация
+# Activate
 source venv/bin/activate  # macOS/Linux
 # venv\Scripts\activate   # Windows
 
-# Зависимости
+# Install dependencies
 pip install -r requirements.txt
 
-# Конфигурация (опционально)
+# Configuration (optional)
 cp .env/.env.example .env/.env
-# Отредактируйте .env/.env для секретов
+# Edit .env/.env for secrets
 
-# Запуск
+# Run
 python run.py
 ```
 
-### Вариант 2: Docker (production-like)
+### Option 2: Docker (Production-like)
 
 ```bash
-# С Docker Compose (рекомендуется)
+# With Docker Compose (recommended)
 make docker-compose-up
 
-# Или напрямую
+# Or directly
 make docker-build
 make docker-run
 ```
 
-Сервер будет доступен на `http://localhost:3001`
+Server will be available at `http://localhost:3001`
 
 ---
 
 ## 🔄 Git Workflow
 
-**⚠️ ВАЖНО:** Больше НЕ работаем напрямую в `main`!
+**⚠️ IMPORTANT:** Never work directly in `main` branch!
 
-### Правильный процесс разработки:
+### Proper Development Process:
 
 ```bash
-# 1. Создай feature branch
+# 1. Create feature branch
 git checkout -b feature/your-feature
 
-# 2. Делай изменения и коммить
+# 2. Make changes and commit
 git add .
 git commit -m "feat: add something"
 
-# 3. Push в GitHub
+# 3. Push to GitHub
 git push origin feature/your-feature
 
-# 4. Создай Pull Request на GitHub
-# ✅ Автоматически запустятся проверки
+# 4. Create Pull Request on GitHub
+# ✅ Automated checks will run
 
-# 5. После прохождения всех проверок → Merge
+# 5. After all checks pass → Merge
 ```
 
-**📚 Подробнее:** [WORKFLOW.md](./WORKFLOW.md) — полная инструкция по Git workflow
+**📚 More details:** [WORKFLOW.md](./WORKFLOW.md) — complete Git workflow guide
 
-## 📁 Структура проекта
+## 📁 Project Structure
 
 ```
 city-helper-ai-backend/
-├── .env/                    # 🔐 Environment variables (скрытая папка)
-│   └── .env.example         # Template (единственный файл в git)
+├── .env/                    # 🔐 Environment variables (hidden folder)
+│   └── .env.example         # Template (only file in git)
 ├── app/
 │   ├── main.py              # FastAPI app
 │   ├── api/routes/          # API endpoints
@@ -99,11 +99,11 @@ city-helper-ai-backend/
 └── [documentation]
 ```
 
-## 🔍 Проверка работы
+## 🔍 Health Check
 
-Откройте в браузере: http://localhost:3001/health
+Open in browser: http://localhost:3001/health
 
-Должны увидеть:
+You should see:
 ```json
 {"status": "ok", "timestamp": "..."}
 ```
@@ -111,92 +111,124 @@ city-helper-ai-backend/
 ## API Endpoints
 
 ### Health Check
-- `GET /health` - Проверка состояния сервера
+- `GET /health` - Server health check
 
-### Аутентификация
-- `POST /api/auth/login` - Вход
-- `POST /api/auth/register` - Регистрация
-- `POST /api/auth/logout` - Выход
-- `GET /api/auth/me` - Получить текущего пользователя
+### Authentication
+- `POST /api/auth/login` - Login
+- `POST /api/auth/register` - Register
+- `POST /api/auth/logout` - Logout
+- `GET /api/auth/me` - Get current user
 
-### Сессии чата
-- `GET /api/chat-sessions` - Получить все сессии
-- `POST /api/chat-sessions` - Создать новую сессию
-- `PATCH /api/chat-sessions/{id}` - Обновить сессию
-- `PATCH /api/chat-sessions/{id}/favorite` - Переключить избранное
-- `DELETE /api/chat-sessions/{id}` - Удалить сессию
+### Chat Sessions
+- `GET /api/chat-sessions` - Get all sessions
+- `POST /api/chat-sessions` - Create new session
+- `PATCH /api/chat-sessions/{id}` - Update session
+- `PATCH /api/chat-sessions/{id}/favorite` - Toggle favorite
+- `DELETE /api/chat-sessions/{id}` - Delete session
 
-### Чат
-- `POST /api/chat/message` - Отправить сообщение и получить ответ
+### Chat
+- `POST /api/chat/message` - Send message and get response
 
-## 📚 Документация API
+## 📚 API Documentation
 
-После запуска сервера интерактивная документация доступна по адресам:
+After starting the server, interactive documentation is available at:
 - **Swagger UI:** http://localhost:3001/docs
 - **ReDoc:** http://localhost:3001/redoc
 
-В Swagger UI вы можете тестировать все эндпоинты прямо из браузера!
+In Swagger UI you can test all endpoints directly from the browser!
 
-## ⚙️ Альтернативный запуск
+## ⚙️ Alternative Launch
 
-Через uvicorn с авто-перезагрузкой:
+With uvicorn and auto-reload:
 ```bash
 uvicorn main:app --reload --port 3001
 ```
 
-## ✨ Особенности
+## ✨ Features
 
-- ✅ Все данные хранятся в памяти (перезапуск сервера сбрасывает данные)
-- ✅ Имитация задержек сети для реалистичного тестирования
-- ✅ Mock-ответы генерируются на основе ключевых слов в сообщениях
-- ✅ CORS настроен для работы с фронтендом на любом порту
-- ✅ Автоматическая интерактивная документация (Swagger/ReDoc)
-- ✅ **Structured Logging** с structlog + Logfire
-- ✅ **Request Tracing** - каждый запрос имеет уникальный ID
-- ✅ **Cloud Observability** (опционально) через Logfire UI
+- ✅ OpenAI GPT-4 integration for intelligent query understanding
+- ✅ Google Places API (New) for real place data
+- ✅ Google Maps integration for routes and directions
+- ✅ Agent-based routing for context-aware conversations
+- ✅ Smart place suggestions with retry logic
+- ✅ Route optimization (greedy nearest-neighbor)
+- ✅ City name normalization (Moscow/Moskva, Lisbon/Lisboa)
+- ✅ **Structured Logging** with structlog + Logfire
+- ✅ **Request Tracing** - each request has unique ID
+- ✅ **Cloud Observability** (optional) via Logfire UI
 - ✅ **Environment-specific Configs** - local/dev/staging/production
-- ✅ **Secrets Management** с Pydantic SecretStr
-- ✅ **Type-safe Configuration** с полной валидацией
+- ✅ **Secrets Management** with Pydantic SecretStr
+- ✅ **Type-safe Configuration** with full validation
+- ✅ **Comprehensive Integration Tests** with pytest
+- ✅ **Pre-commit Hooks** (ruff, detect-secrets)
 
-## 🔗 Интеграция с фронтендом
+## 🔗 Frontend Integration
 
-После запуска бэкенда, запустите фронтенд в real режиме:
+After starting backend, run frontend in real mode:
 
 ```bash
 cd ../city-helper-ai
 npm run dev:real
 ```
 
-Фронтенд автоматически подключится к бэкенду на порту 3001.
+Frontend will automatically connect to backend on port 3001.
 
-## 📖 Документация
+## 📖 Documentation
 
 ### Getting Started
 - **[WORKFLOW.md](./WORKFLOW.md)** - 🔄 Git Workflow & Pull Requests (START HERE!)
-- **[LOGFIRE_SETUP.md](./LOGFIRE_SETUP.md)** - ⚡ Быстрая настройка Logfire
 - **[DOCKER.md](./DOCKER.md)** - 🐳 Docker Setup & Deployment
+- **[GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md)** - 🔑 Google OAuth Setup
 
 ### Development
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Архитектура проекта
-- **[TESTING.md](./TESTING.md)** - Тестирование API
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Project architecture
+- **[TESTING.md](./TESTING.md)** - API testing guide
+- **[AGENT_ROUTING_BLUEPRINT.md](./AGENT_ROUTING_BLUEPRINT.md)** - 🤖 Agent routing logic
 
 ### Configuration & Security
-- **[CONFIGURATION.md](./CONFIGURATION.md)** - Конфигурация и секреты
-- **[SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)** - Security checklist для .env
-- **[LOGGING.md](./LOGGING.md)** - Логирование
+- **[CONFIGURATION.md](./CONFIGURATION.md)** - Configuration and secrets
+- **[SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)** - Security checklist for .env
+- **[LOGGING.md](./LOGGING.md)** - Logging setup
 
 ### CI/CD
 - **[CI_CD.md](./CI_CD.md)** - GitHub Actions CI/CD
-- **[BRANCH_PROTECTION_SETUP.md](./BRANCH_PROTECTION_SETUP.md)** - 🛡️ Настройка защиты main ветки
+- **[BRANCH_PROTECTION_SETUP.md](./BRANCH_PROTECTION_SETUP.md)** - 🛡️ Main branch protection setup
 
-## 🏗️ Принципы архитектуры
+## 🏗️ Architecture Principles
 
-Проект следует **Layered Architecture** с четким разделением ответственности:
+This project follows **Layered Architecture** with clear separation of concerns:
 
 - **Routes** (`app/api/routes/`) - HTTP endpoints
-- **Services** (`app/services/`) - Бизнес-логика
+- **Services** (`app/services/`) - Business logic
 - **Schemas** (`app/schemas/`) - Data validation
 - **Core** (`app/core/`) - Configuration
 - **Utils** (`app/utils/`) - Helpers
 
-Подробнее см. [ARCHITECTURE.md](./ARCHITECTURE.md)
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for details
+
+## 🧪 Testing
+
+Run tests:
+```bash
+# All tests
+make test-all
+
+# Unit tests only
+make test-unit
+
+# Integration tests only (requires OpenAI API key)
+make test-integration
+
+# With coverage report
+make test-coverage
+```
+
+See [TESTING.md](./TESTING.md) for more details.
+
+## 🚀 Deployment
+
+See [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md) for production deployment instructions.
+
+Recommended:
+- **Backend:** Railway.app
+- **Frontend:** Vercel

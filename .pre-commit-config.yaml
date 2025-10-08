@@ -64,6 +64,14 @@ repos:
         pass_filenames: false
         always_run: true
 
+      # Docker build test (only if Dockerfile changed)
+      - id: docker-build-test
+        name: Docker build test
+        entry: bash -c 'echo "🐳 Testing Docker build..." && docker build -t city-helper-backend:pre-commit-test . --quiet > /dev/null && echo "✅ Docker build successful"'
+        language: system
+        pass_filenames: false
+        files: ^Dockerfile$
+
 # Default language version
 default_language_version:
   python: python3.13

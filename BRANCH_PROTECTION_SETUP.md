@@ -1,121 +1,121 @@
 # Branch Protection Setup Guide
 
-## 🛡️ Защита `main` ветки
+## 🛡️ Protecting `main` Branch
 
-**Цель:** Запретить прямые push в `main`, все изменения только через Pull Request.
+**Goal:** Prevent direct pushes to `main`, all changes only through Pull Requests.
 
 ---
 
-## ⚡ Quick Setup (5 минут)
+## ⚡ Quick Setup (5 minutes)
 
-### 1. Открой настройки Branch Protection
+### 1. Open Branch Protection Settings
 
 ```bash
-# Перейди в настройки репозитория
+# Go to repository settings
 open https://github.com/Miron-s-playground/city-helper-ai-backend/settings/branches
 ```
 
-Или вручную:
-1. GitHub → Твой репозиторий
-2. Settings → Branches (в левом меню)
-3. Нажми **"Add branch protection rule"**
+Or manually:
+1. GitHub → Your repository
+2. Settings → Branches (in left menu)
+3. Click **"Add branch protection rule"**
 
-### 2. Заполни поля
+### 2. Fill in Fields
 
 **Branch name pattern:**
 ```
 main
 ```
 
-**Включи следующие опции:**
+**Enable the following options:**
 
 #### ✅ Require a pull request before merging
-- ✅ Включи эту галочку
-- **Require approvals:** 0 (для solo-разработки) / 1+ (для команды)
+- ✅ Enable this checkbox
+- **Require approvals:** 0 (for solo development) / 1+ (for team)
 - ✅ Dismiss stale pull request approvals when new commits are pushed
-- ✅ Require review from Code Owners (опционально)
+- ✅ Require review from Code Owners (optional)
 
 #### ✅ Require status checks to pass before merging
-- ✅ Включи эту галочку
+- ✅ Enable this checkbox
 - ✅ Require branches to be up to date before merging
 
-**Добавь required checks (важно!):**
+**Add required checks (important!):**
 
-Нажми "Search for status checks" и выбери:
+Click "Search for status checks" and select:
 - `Quick Validation`
 - `Code Quality`
 - `Pre-commit Hooks`
 - `Security Scan`
-- `Build & Test (Python 3.13)` (минимум одна версия Python)
+- `Build & Test (Python 3.13)` (at least one Python version)
 - `Docker Build Test`
 - `All Checks Passed ✅`
 
-> **Примечание:** Эти checks появятся в списке ПОСЛЕ первого PR. Если их еще нет — создай тестовый PR, затем вернись к настройкам.
+> **Note:** These checks will appear in the list AFTER the first PR. If they're not there yet — create a test PR, then return to settings.
 
 #### ✅ Require conversation resolution before merging
-- ✅ Включи (если используешь code review)
+- ✅ Enable (if using code review)
 
 #### ✅ Require linear history
-- ✅ Включи (для чистой истории коммитов)
+- ✅ Enable (for clean commit history)
 
 #### ✅ Do not allow bypassing the above settings
-- ✅ Включи (даже admin'ы должны следовать правилам!)
+- ✅ Enable (even admins must follow rules!)
 
 #### ❌ Allow force pushes
-- ❌ Выключено (по умолчанию)
+- ❌ Disabled (default)
 
 #### ❌ Allow deletions
-- ❌ Выключено (по умолчанию)
+- ❌ Disabled (default)
 
-### 3. Сохрани
+### 3. Save
 
-Нажми **"Create"** или **"Save changes"**
+Click **"Create"** or **"Save changes"**
 
 ---
 
-## ✅ Проверка настройки
+## ✅ Verification
 
-### Тест 1: Попробуй push в main (должен заблокироваться)
+### Test 1: Try push to main (should be blocked)
 
 ```bash
-# Попробуй сделать прямой push в main
+# Try direct push to main
 git checkout main
 echo "test" >> test.txt
 git add test.txt
 git commit -m "test: direct push"
 git push
 
-# Должна быть ошибка:
+# Should get error:
 # remote: error: GH006: Protected branch update failed
 ```
 
-**Если получил ошибку** → ✅ Настройка работает!
+**If got error** → ✅ Setup works!
 
-**Если push прошел** → ❌ Вернись к настройкам, проверь чекбоксы
+**If push succeeded** → ❌ Return to settings, check checkboxes
 
-### Тест 2: Создай PR (должен работать)
+### Test 2: Create PR (should work)
 
 ```bash
-# Отмени прошлый коммит
+# Undo previous commit
 git reset --hard origin/main
 
-# Создай feature branch
+# Create feature branch
 git checkout -b test/branch-protection
 echo "test via PR" >> test.txt
 git add test.txt
 git commit -m "test: via pull request"
 git push origin test/branch-protection
 
-# Перейди на GitHub и создай PR
+# Go to GitHub and create PR
 ```
 
-✅ PR должен создаться, CI должен запуститься
+✅ PR should be created, CI should run
 
 ---
 
-## 📋 Рекомендуемые настройки
+## 📋 Recommended Settings
 
-### Для Solo Developer (ты сейчас):
+### For Solo Developer (you now):
 
 ```yaml
 Branch: main
@@ -125,7 +125,7 @@ Require linear history: ✅
 Do not allow bypassing: ✅
 ```
 
-### Для команды:
+### For Team:
 
 ```yaml
 Branch: main
@@ -134,55 +134,55 @@ Require status checks: ✅ (all checks listed above)
 Require conversation resolution: ✅
 Require linear history: ✅
 Do not allow bypassing: ✅
-Restrict who can push: ✅ (только maintainers)
+Restrict who can push: ✅ (only maintainers)
 ```
 
 ---
 
-## 🔥 Экстренный доступ
+## 🔥 Emergency Access
 
-Если ОЧЕНЬ нужно срочно push в main (не рекомендуется):
+If you REALLY need to push to main urgently (not recommended):
 
-1. **Отключи Branch Protection:**
+1. **Disable Branch Protection:**
    - Settings → Branches → Edit rule
-   - Временно отключи "Do not allow bypassing"
+   - Temporarily disable "Do not allow bypassing"
    - Save
 
-2. **Сделай push**
+2. **Make push**
 
-3. **ОБЯЗАТЕЛЬНО включи обратно!**
+3. **MUST enable back!**
 
 ---
 
-## 🎓 Что это даёт?
+## 🎓 What This Gives?
 
-### До Branch Protection:
+### Before Branch Protection:
 ```bash
 git commit -m "fix typo"
 git push origin main
-# ✅ Прошло напрямую (опасно!)
+# ✅ Went through directly (dangerous!)
 ```
 
-### После Branch Protection:
+### After Branch Protection:
 ```bash
 git commit -m "fix typo"
 git push origin main
-# ❌ Заблокировано!
+# ❌ Blocked!
 
-# Правильно:
+# Correct way:
 git checkout -b fix/typo
 git commit -m "fix: typo in documentation"
 git push origin fix/typo
-# Создай PR → CI проверит → Merge
+# Create PR → CI checks → Merge
 ```
 
 ---
 
-## 📊 Статистика CI Checks
+## 📊 CI Checks Statistics
 
-После настройки, на каждом PR будут запускаться:
+After setup, on each PR will run:
 
-| Check | Что проверяет | Время |
+| Check | What it checks | Time |
 |-------|---------------|-------|
 | Quick Validation | PR title format, conflicts | ~30s |
 | Code Quality | Ruff linting & formatting | ~1m |
@@ -191,7 +191,7 @@ git push origin fix/typo
 | Build & Test | Python 3.11, 3.12, 3.13 | ~3m |
 | Docker Build Test | Docker image build & run | ~2m |
 
-**Total:** ~5-8 минут (запускаются параллельно)
+**Total:** ~5-8 minutes (run in parallel)
 
 ---
 
@@ -199,49 +199,49 @@ git push origin fix/typo
 
 ### "I can't find the status checks"
 
-**Проблема:** В списке нет checks для выбора
+**Problem:** No checks in the list to select
 
-**Решение:**
-1. Создай тестовый PR
-2. Дождись завершения CI
-3. Вернись в настройки Branch Protection
-4. Теперь checks должны появиться в поиске
+**Solution:**
+1. Create test PR
+2. Wait for CI to complete
+3. Return to Branch Protection settings
+4. Now checks should appear in search
 
 ### "My PR is blocked but all checks passed"
 
-**Проблема:** Не могу merge, хотя все зелёное
+**Problem:** Can't merge, though everything is green
 
-**Решение:**
-- Проверь что выбран правильный чек `All Checks Passed ✅`
-- Обнови ветку (Merge/Rebase from main)
-- Проверь что нет неразрешенных комментариев
+**Solution:**
+- Check that correct check `All Checks Passed ✅` is selected
+- Update branch (Merge/Rebase from main)
+- Check there are no unresolved comments
 
 ### "I accidentally committed to main before protection"
 
-**Проблема:** Сделал коммиты в main до настройки
+**Problem:** Made commits to main before setup
 
-**Решение:**
+**Solution:**
 ```bash
-# Откати main на remote версию
+# Reset main to remote version
 git fetch origin
 git reset --hard origin/main
 
-# Создай feature branch с твоими изменениями
+# Create feature branch with your changes
 git checkout -b feature/my-changes
-git cherry-pick <commit-hash>  # Для каждого коммита
+git cherry-pick <commit-hash>  # For each commit
 git push origin feature/my-changes
 
-# Создай PR
+# Create PR
 ```
 
 ---
 
-## 🔗 Дополнительные материалы
+## 🔗 Additional Materials
 
 - [GitHub Branch Protection Docs](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches)
-- [WORKFLOW.md](./WORKFLOW.md) - Подробный Git workflow
-- [CI_CD.md](./CI_CD.md) - Как работают CI checks
+- [WORKFLOW.md](./WORKFLOW.md) - Detailed Git workflow
+- [CI_CD.md](./CI_CD.md) - How CI checks work
 
 ---
 
-**Готово! 🎉 Теперь `main` защищён, и все изменения идут через PR.**
+**Done! 🎉 Now `main` is protected, and all changes go through PRs.**
