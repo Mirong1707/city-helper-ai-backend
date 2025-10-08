@@ -196,7 +196,7 @@ class MapsService:
             )
 
         # Generate full route URLs
-        full_route_embed = self.generate_embed_url(places, mode="directions")
+        full_route_embed = self.generate_embed_url(places)
         full_route_link = self.generate_full_route_link(places, travel_mode)
 
         map_data = MapData(
