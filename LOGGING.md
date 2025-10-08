@@ -1,18 +1,18 @@
 # Logging
 
-Structured logging с structlog + Logfire.
+Structured logging with structlog + Logfire.
 
 ## Setup
 
 ```bash
 # .env/.env
-SECRET_LOGFIRE_TOKEN=your_token  # Опционально
+SECRET_LOGFIRE_TOKEN=your_token  # Optional
 ```
 
-Без токена - только локальные JSON логи.
-С токеном - логи + трейсы в Logfire UI.
+Without token - only local JSON logs.
+With token - logs + traces in Logfire UI.
 
-## Использование
+## Usage
 
 ```python
 import structlog
@@ -29,15 +29,15 @@ except Exception:
     logger.exception("failed", task_id="abc")
 ```
 
-## Автоматически логируется
+## Auto-logged Events
 
-- HTTP запросы (метод, путь, статус, request_id)
-- Старт/остановка приложения
-- Ошибки и исключения
-- IP клиента
-- Время выполнения (через Logfire)
+- HTTP requests (method, path, status, request_id)
+- App startup/shutdown
+- Errors and exceptions
+- Client IP
+- Execution time (via Logfire)
 
-## Формат логов
+## Log Format
 
 ```json
 {
@@ -51,17 +51,17 @@ except Exception:
 }
 ```
 
-## Контекст запроса
+## Request Context
 
-Каждый запрос автоматически имеет:
-- `request_id` - уникальный ID
-- `method` - HTTP метод
-- `path` - путь
-- `client_ip` - IP клиента
+Each request automatically has:
+- `request_id` - unique ID
+- `method` - HTTP method
+- `path` - path
+- `client_ip` - client IP
 
-Доступны во всех логах внутри обработки запроса.
+Available in all logs within request handling.
 
-## Уровни
+## Log Levels
 
 ```bash
 APP_LOG_LEVEL=DEBUG   # Development
@@ -72,30 +72,30 @@ APP_LOG_LEVEL=WARNING # Production
 ## Best Practices
 
 **DO:**
-- Используйте структурированные поля
-- Добавляйте контекст (user_id, task_id)
-- Используйте `.exception()` для ошибок
+- Use structured fields
+- Add context (user_id, task_id)
+- Use `.exception()` for errors
 
 **DON'T:**
-- НЕ логируйте пароли, токены, ключи
-- НЕ логируйте персональные данные
-- НЕ используйте string formatting в event
+- DON'T log passwords, tokens, keys
+- DON'T log personal data
+- DON'T use string formatting in event
 
 ```python
 # Good
 logger.info("user_login", user_id="123", success=True)
 
 # Bad
-logger.info(f"User {user_id} logged in")  # Не структурировано
-logger.info("login", password=pwd)         # Секрет в логах!
+logger.info(f"User {user_id} logged in")  # Not structured
+logger.info("login", password=pwd)         # Secret in logs!
 ```
 
 ## Logfire UI
 
-При наличии токена доступны:
-- Фильтрация по полям
-- Трейсы запросов
-- Метрики производительности
-- Поиск по request_id
+With token available:
+- Field filtering
+- Request traces
+- Performance metrics
+- Search by request_id
 
-Регистрация: https://logfire.pydantic.dev
+Register: https://logfire.pydantic.dev

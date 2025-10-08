@@ -21,7 +21,6 @@ make test-all
 
 - **[tests/README.md](tests/README.md)** - Complete testing guide
 - **[AGENT_ROUTING_BLUEPRINT.md](AGENT_ROUTING_BLUEPRINT.md)** - Agent routing decision tree with Mermaid diagram
-- **[TESTING_QUICK_REFERENCE.md](TESTING_QUICK_REFERENCE.md)** - Quick reference for common testing tasks
 
 ### Test Coverage
 
@@ -44,17 +43,17 @@ Time: ~53s | Cost: ~$0.03
 ### Quick Health Check
 
 ```bash
-# Запуск
+# Start server
 python run.py
 
 # Health check
 curl http://localhost:3001/health
 
-# Docs
+# API docs
 open http://localhost:3001/docs
 ```
 
-## Тестирование через cURL
+## Testing with cURL
 
 ### Auth
 
@@ -76,18 +75,18 @@ curl -X POST http://localhost:3001/api/auth/login \
 # Send message
 curl -X POST http://localhost:3001/api/chat/message \
   -H "Content-Type: application/json" \
-  -d '{"message": "Список дел после переезда"}'
+  -d '{"message": "Things to do after moving"}'
 ```
 
-Ответ - JSON с чек-листом (7 пунктов, включая питона 🐍).
+Response - JSON with checklist (7 items, including the python 🐍).
 
 ```bash
 curl -X POST http://localhost:3001/api/chat/message \
   -H "Content-Type: application/json" \
-  -d '{"message": "Маршрут на 2 часа"}'
+  -d '{"message": "2 hour route"}'
 ```
 
-Ответ - JSON с картой (4 точки, включая Python Cafe).
+Response - JSON with map (4 points, including Python Cafe).
 
 ### Chat Sessions
 
@@ -109,7 +108,7 @@ curl -X PATCH http://localhost:3001/api/chat-sessions/SESSION_ID \
 curl -X DELETE http://localhost:3001/api/chat-sessions/SESSION_ID
 ```
 
-## С фронтендом
+## With Frontend
 
 ```bash
 # Terminal 1: Backend
@@ -120,7 +119,7 @@ cd ../city-helper-ai
 npm run dev:real
 ```
 
-Откройте http://localhost:5173 и проверьте в консоли:
+Open http://localhost:5173 and check in console:
 - `🔧 API Mode: real`
 
 ## Troubleshooting
@@ -132,10 +131,10 @@ kill -9 PID
 ```
 
 **CORS errors:**
-- Проверьте что фронтенд запущен через `npm run dev:real`
-- Очистите кэш браузера
+- Check that frontend is running via `npm run dev:real`
+- Clear browser cache
 
 **Backend not responding:**
-- Проверьте виртуальное окружение активировано
+- Check virtual environment is activated
 - `pip install -r requirements.txt`
 - Python 3.8+

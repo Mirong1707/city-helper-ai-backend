@@ -1,209 +1,209 @@
-# CI/CD с GitHub Actions
+# CI/CD with GitHub Actions
 
-Автоматическая проверка кода при каждом push и pull request.
+Automated code checking on every push and pull request.
 
 ## Workflows
 
 ### 1. CI Pipeline (`.github/workflows/ci.yml`)
 
-Запускается при:
-- Push в `main`, `master`, `develop`
-- Создании Pull Request
-- Ручном запуске (Actions → CI → Run workflow)
+Runs on:
+- Push to `main`, `master`, `develop`
+- Pull Request creation
+- Manual trigger (Actions → CI → Run workflow)
 
 **Jobs:**
 
 #### 🔍 Lint & Format Check
-- Проверяет код с Ruff
-- Проверяет форматирование
-- Время: ~30 секунд
+- Checks code with Ruff
+- Checks formatting
+- Time: ~30 seconds
 
 #### 🪝 Pre-commit Hooks
-- Запускает все pre-commit хуки
-- Проверяет файлы, секреты, форматирование
-- Время: ~1 минута
+- Runs all pre-commit hooks
+- Checks files, secrets, formatting
+- Time: ~1 minute
 
 #### 🔒 Security Checks
-- **Bandit** - находит уязвимости в коде
-- **Safety** - проверяет зависимости на известные CVE
-- Время: ~30 секунд
+- **Bandit** - finds code vulnerabilities
+- **Safety** - checks dependencies for known CVEs
+- Time: ~30 seconds
 
 #### 🏗️ Build & Test
-- Тестирует на Python 3.11, 3.12, 3.13
-- Проверяет импорты
-- Smoke test (запуск сервера)
-- Время: ~1 минута на версию
+- Tests on Python 3.11, 3.12, 3.13
+- Checks imports
+- Smoke test (server start)
+- Time: ~1 minute per version
 
-**Всего: ~3-4 минуты**
+**Total: ~3-4 minutes**
 
 ### 2. Dependency Review (`.github/workflows/dependency-review.yml`)
 
-Запускается только для Pull Requests.
+Runs only for Pull Requests.
 
-**Что проверяет:**
-- Новые зависимости с уязвимостями
-- Лицензии (совместимость)
-- Устаревшие пакеты
-- Оставляет комментарий в PR с результатами
+**What it checks:**
+- New dependencies with vulnerabilities
+- Licenses (compatibility)
+- Outdated packages
+- Leaves comment in PR with results
 
 ### 3. Dependabot (`.github/dependabot.yml`)
 
-Автоматические обновления зависимостей:
-- **Python**: проверка каждый понедельник в 09:00
-- **GitHub Actions**: проверка каждый понедельник в 09:00
-- Создаёт PR с обновлениями
-- Максимум 10 PR одновременно
+Automatic dependency updates:
+- **Python**: check every Monday at 09:00
+- **GitHub Actions**: check every Monday at 09:00
+- Creates PRs with updates
+- Maximum 10 PRs at once
 
-## Как использовать
+## How to Use
 
-### При разработке
+### During Development
 
-1. **Создай ветку:**
+1. **Create branch:**
    ```bash
    git checkout -b feature/my-feature
    ```
 
-2. **Пиши код:**
+2. **Write code:**
    ```bash
-   # Локальная проверка
+   # Local check
    make check
    make run-hooks
    ```
 
-3. **Закоммить:**
+3. **Commit:**
    ```bash
    git add .
    git commit -m "feat: add new feature"
-   # Pre-commit автоматически проверит
+   # Pre-commit will check automatically
    ```
 
-4. **Запуш:**
+4. **Push:**
    ```bash
    git push origin feature/my-feature
    ```
 
-5. **Создай PR:**
-   - Зайди на GitHub
-   - Создай Pull Request
-   - CI автоматически запустится
-   - Дождись ✅ зелёных галочек
+5. **Create PR:**
+   - Go to GitHub
+   - Create Pull Request
+   - CI will run automatically
+   - Wait for ✅ green checks
 
-### Просмотр результатов
+### Viewing Results
 
 GitHub → Repository → Actions
 
-**Зелёная галочка** ✅ - всё ок, можно мерджить
-**Красный крестик** ❌ - есть проблемы, нужно исправить
-**Жёлтый кружок** 🟡 - выполняется
+**Green checkmark** ✅ - all good, can merge
+**Red cross** ❌ - there are issues, need to fix
+**Yellow circle** 🟡 - running
 
-Кликни на workflow → кликни на job → смотри логи
+Click on workflow → click on job → view logs
 
-### Ручной запуск CI
+### Manual CI Run
 
-GitHub → Actions → CI → Run workflow → выбери ветку → Run
+GitHub → Actions → CI → Run workflow → select branch → Run
 
-Полезно для:
-- Проверки после настройки
-- Отладки CI
-- Повторного запуска после фикса
+Useful for:
+- Checking after setup
+- CI debugging
+- Re-running after fix
 
-## Проверка локально
+## Local Checks
 
-Перед push рекомендуется:
+Before push, recommended:
 
 ```bash
-# Полная проверка (как в CI)
+# Full check (like in CI)
 make check
 make run-hooks
 
-# Только линтер
+# Linter only
 make lint
 
-# Автоисправление
+# Auto-fix
 make fix
 
-# Pre-commit на всех файлах
+# Pre-commit on all files
 pre-commit run --all-files
 ```
 
-## Статусы и badges
+## Status and Badges
 
-Добавь в README для отображения статуса:
+Add to README to display status:
 
 ```markdown
 [![CI](https://github.com/USER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/USER/REPO/actions/workflows/ci.yml)
 ```
 
-## Настройка для нового репозитория
+## Setup for New Repository
 
-1. **Создай репозиторий на GitHub**
+1. **Create repository on GitHub**
 
-2. **Добавь файлы:**
+2. **Add files:**
    ```bash
    git add .github/
    git commit -m "ci: add GitHub Actions"
    git push origin main
    ```
 
-3. **Включи Actions:**
+3. **Enable Actions:**
    - GitHub → Settings → Actions → Allow all actions
 
-4. **Настрой Dependabot:**
+4. **Configure Dependabot:**
    - GitHub → Settings → Security → Enable Dependabot
 
-5. **Первый запуск:**
-   - Сделай любой commit
-   - CI запустится автоматически
+5. **First run:**
+   - Make any commit
+   - CI will run automatically
 
-## Отладка проблем
+## Debugging Issues
 
-### CI падает на Lint
+### CI Fails on Lint
 ```bash
-# Локально исправь
+# Fix locally
 make fix
 git add .
 git commit --amend --no-edit
 git push --force-with-lease
 ```
 
-### CI падает на Security
-Смотри `bandit-report.json` в Artifacts:
-- GitHub → Actions → твой workflow → Artifacts → security-reports
+### CI Fails on Security
+Check `bandit-report.json` in Artifacts:
+- GitHub → Actions → your workflow → Artifacts → security-reports
 
-### CI падает на Build
-Проверь совместимость с Python 3.11+:
+### CI Fails on Build
+Check compatibility with Python 3.11+:
 ```bash
-# Локально протестируй
+# Test locally
 python run.py
 ```
 
-## Оптимизация скорости
+## Speed Optimization
 
-CI уже оптимизирован:
-- ✅ Кэширование pip зависимостей
-- ✅ Кэширование pre-commit hooks
-- ✅ Параллельный запуск jobs
-- ✅ Matrix strategy для Python версий
+CI is already optimized:
+- ✅ Pip dependencies caching
+- ✅ Pre-commit hooks caching
+- ✅ Parallel job execution
+- ✅ Matrix strategy for Python versions
 
-Среднее время: **3-4 минуты**
+Average time: **3-4 minutes**
 
-## Безопасность
+## Security
 
 **Secrets:**
-Если нужны секреты (API keys):
+If you need secrets (API keys):
 - GitHub → Settings → Secrets and variables → Actions → New secret
-- В workflow: `${{ secrets.SECRET_NAME }}`
+- In workflow: `${{ secrets.SECRET_NAME }}`
 
 **Permissions:**
-Workflow имеет минимальные права:
-- `contents: read` - читать код
-- `pull-requests: write` - комментировать PR (dependency review)
+Workflow has minimal permissions:
+- `contents: read` - read code
+- `pull-requests: write` - comment on PR (dependency review)
 
-## Расширение CI
+## Extending CI
 
-### Добавить тесты (pytest)
+### Add Tests (pytest)
 
-Раскомментируй в `ci.yml`:
+Uncomment in `ci.yml`:
 ```yaml
 test:
   name: Run Tests
@@ -212,16 +212,16 @@ test:
     # ... pytest steps
 ```
 
-### Добавить coverage
+### Add Coverage
 
 ```yaml
 - name: Upload coverage to Codecov
   uses: codecov/codecov-action@v4
 ```
 
-### Добавить deployment
+### Add Deployment
 
-Создай новый workflow `.github/workflows/deploy.yml`:
+Create new workflow `.github/workflows/deploy.yml`:
 ```yaml
 name: Deploy
 on:
@@ -234,29 +234,29 @@ jobs:
 
 ## Troubleshooting
 
-**Workflow не запускается:**
-- Проверь, что файл в `.github/workflows/`
-- Проверь синтаксис YAML (spaces, not tabs)
-- Проверь, что Actions включены в Settings
+**Workflow doesn't run:**
+- Check file is in `.github/workflows/`
+- Check YAML syntax (spaces, not tabs)
+- Check Actions are enabled in Settings
 
 **Permission denied:**
 - GitHub → Settings → Actions → Workflow permissions → Read and write
 
-**Долго выполняется:**
-- Проверь логи
-- Убедись, что кэширование работает
-- Оптимизируй список зависимостей
+**Takes too long:**
+- Check logs
+- Make sure caching works
+- Optimize dependency list
 
 ## Best Practices
 
 ✅ **DO:**
-- Проверяй локально перед push
-- Читай логи при ошибках
-- Используй осмысленные commit messages
-- Merge только с зелёными CI
+- Check locally before push
+- Read logs on errors
+- Use meaningful commit messages
+- Merge only with green CI
 
 ❌ **DON'T:**
-- Не пушь напрямую в main (используй PR)
-- Не игнорируй красные CI
-- Не пропускай pre-commit (`--no-verify`)
-- Не храни секреты в коде
+- Don't push directly to main (use PR)
+- Don't ignore red CI
+- Don't skip pre-commit (`--no-verify`)
+- Don't store secrets in code

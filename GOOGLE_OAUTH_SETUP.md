@@ -1,117 +1,117 @@
 # Google OAuth2 Setup Guide
 
-Пошаговая инструкция для настройки Google OAuth2 аутентификации.
+Step-by-step instructions for setting up Google OAuth2 authentication.
 
 ---
 
-## 📋 Часть 1: Google Cloud Console Setup
+## 📋 Part 1: Google Cloud Console Setup
 
-### Шаг 1: Создай Google Cloud проект
+### Step 1: Create Google Cloud Project
 
-1. Открой: https://console.cloud.google.com
-2. Нажми на dropdown вверху (где название проекта)
-3. Нажми **"New Project"**
-4. Заполни:
-   - **Project name**: `city-helper` (или любое название)
-   - **Organization**: оставь пустым (No organization)
-5. Нажми **"Create"**
-6. Подожди 10-15 секунд пока проект создастся
-
----
-
-### Шаг 2: Включи Google Identity API
-
-1. Открой: https://console.cloud.google.com/apis/library
-2. Убедись что выбран твой проект `city-helper` (вверху)
-3. В поиске найди: **"Google+ API"** или **"Google Identity Services"**
-4. Нажми на результат
-5. Нажми **"Enable"** (если кнопка есть)
-6. Подожди пока API включится
+1. Open: https://console.cloud.google.com
+2. Click on dropdown at the top (where project name is)
+3. Click **"New Project"**
+4. Fill in:
+   - **Project name**: `city-helper` (or any name)
+   - **Organization**: leave empty (No organization)
+5. Click **"Create"**
+6. Wait 10-15 seconds for project to be created
 
 ---
 
-### Шаг 3: Настрой OAuth Consent Screen
+### Step 2: Enable Google Identity API
 
-1. Открой: https://console.cloud.google.com/apis/credentials/consent
-2. Выбери **"External"** (для тестирования)
-3. Нажми **"Create"**
+1. Open: https://console.cloud.google.com/apis/library
+2. Make sure your project `city-helper` is selected (at the top)
+3. Search for: **"Google+ API"** or **"Google Identity Services"**
+4. Click on the result
+5. Click **"Enable"** (if button is present)
+6. Wait for API to be enabled
 
-#### Шаг 3.1: OAuth consent screen (Страница 1)
+---
 
-Заполни обязательные поля:
+### Step 3: Configure OAuth Consent Screen
+
+1. Open: https://console.cloud.google.com/apis/credentials/consent
+2. Select **"External"** (for testing)
+3. Click **"Create"**
+
+#### Step 3.1: OAuth consent screen (Page 1)
+
+Fill in required fields:
 - **App name**: `City Helper`
-- **User support email**: твой email (выбери из dropdown)
-- **App logo**: можешь пропустить (не обязательно)
-- **Application home page**: `http://localhost:3001` (пока для разработки)
-- **Developer contact information**: твой email
+- **User support email**: your email (select from dropdown)
+- **App logo**: can skip (optional)
+- **Application home page**: `http://localhost:3001` (for development)
+- **Developer contact information**: your email
 
-Нажми **"Save and Continue"**
+Click **"Save and Continue"**
 
-#### Шаг 3.2: Scopes (Страница 2)
+#### Step 3.2: Scopes (Page 2)
 
-1. Нажми **"Add or Remove Scopes"**
-2. Найди и отметь:
+1. Click **"Add or Remove Scopes"**
+2. Find and check:
    - ✅ `.../auth/userinfo.email`
    - ✅ `.../auth/userinfo.profile`
    - ✅ `openid`
-3. Нажми **"Update"**
-4. Нажми **"Save and Continue"**
+3. Click **"Update"**
+4. Click **"Save and Continue"**
 
-#### Шаг 3.3: Test users (Страница 3)
+#### Step 3.3: Test users (Page 3)
 
-1. Нажми **"Add Users"**
-2. Введи свой email (для тестирования)
-3. Нажми **"Add"**
-4. Нажми **"Save and Continue"**
+1. Click **"Add Users"**
+2. Enter your email (for testing)
+3. Click **"Add"**
+4. Click **"Save and Continue"**
 
-#### Шаг 3.4: Summary (Страница 4)
+#### Step 3.4: Summary (Page 4)
 
-Просмотри и нажми **"Back to Dashboard"**
+Review and click **"Back to Dashboard"**
 
 ---
 
-### Шаг 4: Создай OAuth2 Credentials
+### Step 4: Create OAuth2 Credentials
 
-1. Открой: https://console.cloud.google.com/apis/credentials
-2. Нажми **"Create Credentials"** → **"OAuth client ID"**
-3. Заполни:
+1. Open: https://console.cloud.google.com/apis/credentials
+2. Click **"Create Credentials"** → **"OAuth client ID"**
+3. Fill in:
    - **Application type**: **"Web application"**
    - **Name**: `City Helper Web Client`
 
-4. **Authorized JavaScript origins** (опционально):
+4. **Authorized JavaScript origins** (optional):
    - `http://localhost:3001`
-   - `http://localhost:5173` (если фронтенд на другом порту)
+   - `http://localhost:5173` (if frontend on different port)
 
-5. **Authorized redirect URIs** (ВАЖНО!):
-   Добавь оба URI:
+5. **Authorized redirect URIs** (IMPORTANT!):
+   Add both URIs:
    ```
    http://localhost:3001/api/auth/google/callback
    http://localhost:5173/auth/google/callback
    ```
 
-   ⚠️ **Внимание:** URL должны быть точными (без лишних слэшей)!
+   ⚠️ **Warning:** URLs must be exact (no extra slashes)!
 
-6. Нажми **"Create"**
-
----
-
-### Шаг 5: Сохрани Credentials
-
-После создания откроется окно с credentials:
-
-1. **Client ID** (длинная строка типа `xxxxx.apps.googleusercontent.com`)
-   - Скопируй и сохрани
-
-2. **Client secret** (короче, типа `GOCSPX-...`)
-   - Скопируй и сохрани
-
-⚠️ **Не теряй эти данные!** (Если потеряешь, можно будет посмотреть в Google Cloud Console)
+6. Click **"Create"**
 
 ---
 
-## 📋 Часть 2: Backend Configuration
+### Step 5: Save Credentials
 
-### Шаг 1: Установи зависимости
+After creation, a window with credentials will open:
+
+1. **Client ID** (long string like `xxxxx.apps.googleusercontent.com`)
+   - Copy and save
+
+2. **Client secret** (shorter, like `GOCSPX-...`)
+   - Copy and save
+
+⚠️ **Don't lose these!** (If lost, can view in Google Cloud Console)
+
+---
+
+## 📋 Part 2: Backend Configuration
+
+### Step 1: Install Dependencies
 
 ```bash
 cd /Users/miron/Documents/AI/city-helper/city-helper-ai-backend
@@ -121,72 +121,72 @@ pip install -r requirements.txt
 
 ---
 
-### Шаг 2: Настрой Environment Variables
+### Step 2: Configure Environment Variables
 
-#### Вариант A: Через .env файл (рекомендуется)
+#### Option A: Via .env file (recommended)
 
-1. Создай файл `.env/.env`:
+1. Create file `.env/.env`:
    ```bash
    mkdir -p .env
    touch .env/.env
    ```
 
-2. Открой файл и добавь:
+2. Open file and add:
    ```bash
    # Google OAuth2 Credentials
-   SECRET_GOOGLE_CLIENT_ID=твой-client-id.apps.googleusercontent.com
-   SECRET_GOOGLE_CLIENT_SECRET=твой-client-secret
+   SECRET_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   SECRET_GOOGLE_CLIENT_SECRET=your-client-secret
    ```
 
-3. Замени `твой-client-id` и `твой-client-secret` на реальные значения из Шага 5
+3. Replace `your-client-id` and `your-client-secret` with real values from Step 5
 
-#### Вариант B: Через terminal (для быстрого теста)
+#### Option B: Via terminal (for quick test)
 
 ```bash
-export SECRET_GOOGLE_CLIENT_ID="твой-client-id.apps.googleusercontent.com"
-export SECRET_GOOGLE_CLIENT_SECRET="твой-client-secret"  # pragma: allowlist secret
+export SECRET_GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+export SECRET_GOOGLE_CLIENT_SECRET="your-client-secret"  # pragma: allowlist secret
 ```
 
 ---
 
-### Шаг 3: Перезапусти сервер
+### Step 3: Restart Server
 
 ```bash
-# Останови старый сервер (Ctrl+C если запущен)
+# Stop old server (Ctrl+C if running)
 
-# Запусти заново
+# Start again
 python run.py
 ```
 
-Ты должен увидеть в логах:
+You should see in logs:
 ```
 google_oauth_configured   client_id_prefix=xxxxx...
 ```
 
-Если видишь `google_oauth_not_configured` — проверь `.env/.env` файл.
+If you see `google_oauth_not_configured` — check `.env/.env` file.
 
 ---
 
-## 🧪 Часть 3: Тестирование
+## 🧪 Part 3: Testing
 
-### Метод 1: Через Browser (самый простой)
+### Method 1: Via Browser (simplest)
 
-1. Открой: http://localhost:3001/api/auth/google
+1. Open: http://localhost:3001/api/auth/google
 
-2. Ты получишь JSON с `auth_url`:
+2. You'll get JSON with `auth_url`:
    ```json
    {
      "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?..."
    }
    ```
 
-3. Скопируй `auth_url` и открой в браузере
+3. Copy `auth_url` and open in browser
 
-4. Залогинься через Google (используй test user email)
+4. Login via Google (use test user email)
 
-5. Google перенаправит тебя на callback URL
+5. Google will redirect you to callback URL
 
-6. Ты должен получить JSON с user info и token:
+6. You should get JSON with user info and token:
    ```json
    {
      "user": {
@@ -201,115 +201,115 @@ google_oauth_configured   client_id_prefix=xxxxx...
    }
    ```
 
-✅ **Если видишь это — всё работает!**
+✅ **If you see this — everything works!**
 
 ---
 
-### Метод 2: Через Swagger UI
+### Method 2: Via Swagger UI
 
-1. Открой: http://localhost:3001/docs
+1. Open: http://localhost:3001/docs
 
-2. Найди **`GET /api/auth/google`**
+2. Find **`GET /api/auth/google`**
 
-3. Нажми **"Try it out"** → **"Execute"**
+3. Click **"Try it out"** → **"Execute"**
 
-4. Скопируй `auth_url` из ответа
+4. Copy `auth_url` from response
 
-5. Открой `auth_url` в браузере
+5. Open `auth_url` in browser
 
-6. После логина Google вернёт тебя на callback
+6. After login, Google will return you to callback
 
 ---
 
-### Метод 3: Через curl
+### Method 3: Via curl
 
 ```bash
-# Получи auth URL
+# Get auth URL
 curl http://localhost:3001/api/auth/google
 
-# Открой auth_url в браузере, залогинься
-# Google вернёт тебя на callback с code в URL
+# Open auth_url in browser, login
+# Google will return you to callback with code in URL
 
-# Пример callback URL:
+# Example callback URL:
 # http://localhost:3001/api/auth/google/callback?code=4/0AanFFf...&scope=email...
 
-# Backend автоматически обработает callback
+# Backend will automatically handle callback
 ```
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Ошибка: "Google OAuth2 is not configured"
+### Error: "Google OAuth2 is not configured"
 
-**Причина:** Credentials не загрузились
+**Cause:** Credentials not loaded
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверь что .env/.env существует
+# Check that .env/.env exists
 cat .env/.env
 
-# Проверь переменные
+# Check variables
 echo $SECRET_GOOGLE_CLIENT_ID
 echo $SECRET_GOOGLE_CLIENT_SECRET
 
-# Перезапусти сервер
+# Restart server
 python run.py
 ```
 
 ---
 
-### Ошибка: "redirect_uri_mismatch"
+### Error: "redirect_uri_mismatch"
 
-**Причина:** redirect_uri не совпадает с настроенным в Google Console
+**Cause:** redirect_uri doesn't match configured in Google Console
 
-**Решение:**
-1. Открой: https://console.cloud.google.com/apis/credentials
-2. Нажми на свой OAuth Client ID
-3. Проверь **Authorized redirect URIs**
-4. Должно быть: `http://localhost:3001/api/auth/google/callback`
-5. Если нет — добавь и сохрани
-
----
-
-### Ошибка: "Access blocked: This app's request is invalid"
-
-**Причина:** OAuth Consent Screen не настроен или не добавлен test user
-
-**Решение:**
-1. Открой: https://console.cloud.google.com/apis/credentials/consent
-2. Проверь что app status = "Testing"
-3. Добавь свой email в **Test users**
-4. Попробуй снова через 5 минут (Google кэширует)
+**Solution:**
+1. Open: https://console.cloud.google.com/apis/credentials
+2. Click on your OAuth Client ID
+3. Check **Authorized redirect URIs**
+4. Should be: `http://localhost:3001/api/auth/google/callback`
+5. If not — add and save
 
 ---
 
-### Ошибка 401 при callback
+### Error: "Access blocked: This app's request is invalid"
 
-**Причина:** Неправильный Client ID или Secret
+**Cause:** OAuth Consent Screen not configured or test user not added
 
-**Решение:**
-1. Проверь `.env/.env` файл
-2. Убедись что нет пробелов или кавычек
-3. Client ID должен заканчиваться на `.apps.googleusercontent.com`
-4. Client Secret должен начинаться с `GOCSPX-`
+**Solution:**
+1. Open: https://console.cloud.google.com/apis/credentials/consent
+2. Check that app status = "Testing"
+3. Add your email to **Test users**
+4. Try again in 5 minutes (Google caches)
 
 ---
 
-## 📊 Структура OAuth2 Flow
+### Error 401 at callback
+
+**Cause:** Wrong Client ID or Secret
+
+**Solution:**
+1. Check `.env/.env` file
+2. Make sure there are no spaces or quotes
+3. Client ID should end with `.apps.googleusercontent.com`
+4. Client Secret should start with `GOCSPX-`
+
+---
+
+## 📊 OAuth2 Flow Structure
 
 ```
 1. User → Frontend
-   "Хочу войти через Google"
+   "I want to sign in with Google"
 
 2. Frontend → GET /api/auth/google
-   Получает auth_url
+   Gets auth_url
 
 3. Frontend → Redirect to Google
    auth_url = https://accounts.google.com/o/oauth2/v2/auth?...
 
-4. User → Логинится в Google
-   Разрешает доступ к email & profile
+4. User → Login to Google
+   Grants access to email & profile
 
 5. Google → Redirect to callback
    /api/auth/google/callback?code=ABC123...
@@ -321,7 +321,7 @@ python run.py
    GET https://www.googleapis.com/oauth2/v2/userinfo
 
 8. Backend → Create/Find user in DB
-   По provider_user_id (Google ID)
+   By provider_user_id (Google ID)
 
 9. Backend → Return user + session token
    { user: {...}, token: "session-..." }
@@ -337,16 +337,16 @@ python run.py
 
 ## 🎯 Next Steps
 
-После успешного тестирования:
+After successful testing:
 
-1. ✅ Google OAuth2 работает локально
-2. 📱 Добавь фронтенд UI для "Sign in with Google"
-3. 🔐 Для production: verify domain в Google Console
-4. 🍎 (Опционально) Добавь Apple Sign In
+1. ✅ Google OAuth2 works locally
+2. 📱 Add frontend UI for "Sign in with Google"
+3. 🔐 For production: verify domain in Google Console
+4. 🍎 (Optional) Add Apple Sign In
 
 ---
 
-## 📚 Полезные ссылки
+## 📚 Useful Links
 
 - **Google Cloud Console**: https://console.cloud.google.com
 - **OAuth2 Playground**: https://developers.google.com/oauthplayground

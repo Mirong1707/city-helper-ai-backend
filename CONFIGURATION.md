@@ -1,22 +1,22 @@
 # Configuration
 
-Модульная система конфигурации с поддержкой окружений и секретов.
+Modular configuration system with environment and secrets support.
 
-## Структура
+## Structure
 
 ```
 app/core/config/
-├── base.py          # Общие настройки
+├── base.py          # Common settings
 ├── environments.py  # local/development/staging/production
-├── secrets.py       # Секреты (SecretStr)
-└── loader.py        # Загрузчик с кэшированием
+├── secrets.py       # Secrets (SecretStr)
+└── loader.py        # Loader with caching
 ```
 
-## Окружения
+## Environments
 
 ```bash
-# Переключение
-APP_ENV=local python run.py         # По умолчанию
+# Switching
+APP_ENV=local python run.py         # Default
 APP_ENV=development python run.py
 APP_ENV=staging python run.py
 APP_ENV=production python run.py
@@ -29,11 +29,11 @@ APP_ENV=production python run.py
 | staging | ❌ | INFO | ❌ | Restricted |
 | production | ❌ | WARNING | ❌ | Strict |
 
-## Секреты
+## Secrets
 
-Используется `Pydantic SecretStr` - секреты не логируются автоматически.
+Uses `Pydantic SecretStr` - secrets are not logged automatically.
 
-### Доступные секреты:
+### Available secrets:
 
 ```bash
 # .env/.env
@@ -46,33 +46,33 @@ SECRET_REDIS_URL=              # Redis
 SECRET_SENTRY_DSN=             # Sentry
 ```
 
-### Использование:
+### Usage:
 
 ```python
 from app.core.config import settings
 
-# Проверка
+# Check
 if settings.has_logfire():
     token = settings.get_logfire_token()
 
-# Прямой доступ
+# Direct access
 secrets = settings.secrets
 if secrets.has_database_url():
     url = secrets.get_database_url()
 ```
 
-## Конфигурация
+## Configuration
 
 ```python
 from app.core.config import settings
 
-# Основное
+# Main
 settings.app_name       # str
 settings.environment    # Environment enum
 settings.debug          # bool
 settings.port           # int
 
-# Конфиг окружения
+# Environment config
 config = settings.config
 config.host             # str
 config.cors_origins     # List[str]
@@ -80,15 +80,15 @@ config.auth_delay       # float
 config.log_level        # str
 ```
 
-## Приоритет загрузки
+## Load Priority
 
-1. Environment variables (высший)
-2. `.env` файл  
-3. Default values в коде
+1. Environment variables (highest)
+2. `.env` file  
+3. Default values in code
 
-## Добавление настроек
+## Adding Settings
 
-### Общая настройка (base.py):
+### Common setting (base.py):
 
 ```python
 class BaseConfig(BaseSettings):
@@ -105,7 +105,7 @@ class ProductionConfig(BaseConfig):
     my_setting: str = "production_value"
 ```
 
-### Секрет (secrets.py):
+### Secret (secrets.py):
 
 ```python
 class SecretsConfig(BaseSettings):
@@ -115,17 +115,17 @@ class SecretsConfig(BaseSettings):
         return self.my_token.get_secret_value() if self.my_token else None
 ```
 
-## Валидация
+## Validation
 
-Pydantic автоматически валидирует:
+Pydantic automatically validates:
 
 ```python
 port: int = Field(ge=1, le=65535)      # 1-65535
-environment: Environment                # Только из enum
-cors_origins: List[str]                # Список строк
+environment: Environment                # Only from enum
+cors_origins: List[str]                # List of strings
 ```
 
-## Файлы
+## Files
 
 ```bash
 # Setup
@@ -133,8 +133,8 @@ cp .env/.env.example .env/.env
 nano .env/.env
 
 # Structure
-.env/                # Скрытая папка (gitignored кроме .env.example)
-├── .env.example     # Template (в git)
+.env/                # Hidden folder (gitignored except .env.example)
+├── .env.example     # Template (in git)
 ├── .env             # Main (gitignored)
 ├── .env.production  # Production (gitignored)
 └── .env.staging     # Staging (gitignored)
@@ -143,16 +143,16 @@ nano .env/.env
 ## Production
 
 ```bash
-# В production требуйте обязательные секреты
+# In production require mandatory secrets
 if settings.environment == Environment.PRODUCTION:
     if not settings.has_logfire():
         raise ValueError("Logfire required in production")
 ```
 
-## Безопасность
+## Security
 
-**ВАЖНО:**
-- Папка `.env/` полностью в `.gitignore` (кроме `.env.example`)
-- Никогда не коммитьте файлы с реальными секретами
-- Используйте разные секреты для dev/staging/prod
-- В production используйте secret managers (AWS Secrets Manager, etc.)
+**IMPORTANT:**
+- `.env/` folder fully in `.gitignore` (except `.env.example`)
+- Never commit files with real secrets
+- Use different secrets for dev/staging/prod
+- In production use secret managers (AWS Secrets Manager, etc.)

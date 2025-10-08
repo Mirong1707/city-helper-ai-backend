@@ -1,75 +1,75 @@
-# Security Checklist для .env/
+# Security Checklist for .env/
 
-## ✅ Проверка безопасности конфигурации
+## ✅ Configuration Security Check
 
-### 1. Проверка .gitignore
+### 1. .gitignore Check
 
 ```bash
-# Все секреты должны игнорироваться
+# All secrets should be ignored
 git check-ignore -v .env/.env .env/.env.production .env/.env.staging
 
-# Только .env.example должен быть в git
+# Only .env.example should be in git
 git ls-files .env/
 ```
 
-**Ожидаемый результат:**
-- `git check-ignore` показывает что все .env файлы игнорируются
-- `git ls-files` показывает только `.env/.env.example`
+**Expected result:**
+- `git check-ignore` shows that all .env files are ignored
+- `git ls-files` shows only `.env/.env.example`
 
-### 2. Проверка случайного коммита
+### 2. Accidental Commit Check
 
 ```bash
-# Попробовать добавить секрет (должно заблокировать)
+# Try to add secret (should be blocked)
 echo "SECRET_TEST=value" > .env/.env
 git add .env/.env
 
-# Должна быть ошибка: "The following paths are ignored"
+# Should get error: "The following paths are ignored"
 ```
 
-### 3. Правила безопасности
+### 3. Security Rules
 
-❌ **НИКОГДА:**
-- Не коммитьте файлы с реальными секретами
-- Не шарьте .env файлы в чатах/email
-- Не храните production секреты в dev окружении
-- Не используйте слабые секреты (test, 123, etc.)
+❌ **NEVER:**
+- Don't commit files with real secrets
+- Don't share .env files in chats/email
+- Don't store production secrets in dev environment
+- Don't use weak secrets (test, 123, etc.)
 
-✅ **ВСЕГДА:**
-- Используйте разные секреты для каждого окружения
-- Ротируйте секреты регулярно
-- В production используйте secret managers (AWS/Azure/Vault)
-- Проверяйте `.gitignore` перед коммитом секретов
+✅ **ALWAYS:**
+- Use different secrets for each environment
+- Rotate secrets regularly
+- In production use secret managers (AWS/Azure/Vault)
+- Check `.gitignore` before committing secrets
 
-### 4. Если секреты утекли
+### 4. If Secrets Leaked
 
-1. **Немедленно ротируйте** все скомпрометированные секреты
-2. Удалите из git history:
+1. **Immediately rotate** all compromised secrets
+2. Remove from git history:
    ```bash
-   # Используйте BFG Repo-Cleaner
+   # Use BFG Repo-Cleaner
    bfg --delete-files .env
    git reflog expire --expire=now --all
    git gc --prune=now --aggressive
    ```
-3. Проверьте логи доступа к сервисам
-4. Уведомите команду
+3. Check service access logs
+4. Notify team
 
-### 5. Структура .env/
+### 5. .env/ Structure
 
 ```
 .env/
-├── .env.example         ✅ В git (template без секретов)
+├── .env.example         ✅ In git (template without secrets)
 ├── .env                 ❌ Gitignored (local dev)
 ├── .env.production      ❌ Gitignored (production secrets)
 └── .env.staging         ❌ Gitignored (staging secrets)
 ```
 
-## Текущий статус
+## Current Status
 
 ```bash
-# Проверка текущей конфигурации
+# Check current configuration
 cd city-helper-ai-backend
-git check-ignore -v .env/.env  # Должен игнорироваться
-git ls-files .env/             # Только .env.example
+git check-ignore -v .env/.env  # Should be ignored
+git ls-files .env/             # Only .env.example
 ```
 
-✅ Конфигурация безопасна!
+✅ Configuration is secure!

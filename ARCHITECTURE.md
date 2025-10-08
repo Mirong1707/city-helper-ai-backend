@@ -1,8 +1,8 @@
 # Architecture
 
-Layered Architecture с разделением ответственности.
+Layered Architecture with clear separation of concerns.
 
-## Структура
+## Structure
 
 ```
 app/
@@ -13,81 +13,81 @@ app/
 └── utils/           # Helpers
 ```
 
-## Слои
+## Layers
 
 ### API Layer (`api/routes/`)
 
-**Ответственность:** HTTP запросы/ответы
+**Responsibility:** HTTP requests/responses
 
-- Валидация входных данных
-- Маршрутизация
-- Форматирование ответов
+- Input data validation
+- Routing
+- Response formatting
 - HTTP errors
 
-**Принцип:** Тонкие контроллеры, логика в services.
+**Principle:** Thin controllers, logic in services.
 
 ### Service Layer (`services/`)
 
-**Ответственность:** Бизнес-логика
+**Responsibility:** Business logic
 
-- Основная логика приложения
-- Работа с данными
-- Обработка бизнес-правил
+- Core application logic
+- Data processing
+- Business rules handling
 
-**Принцип:** Независимость от HTTP, тестируемость.
+**Principle:** HTTP-independent, testable.
 
 ### Schema Layer (`schemas/`)
 
-**Ответственность:** Data Transfer Objects
+**Responsibility:** Data Transfer Objects
 
-- Валидация данных (Pydantic)
-- Сериализация/десериализация
-- API документация
+- Data validation (Pydantic)
+- Serialization/deserialization
+- API documentation
 
 ### Core Layer (`core/`)
 
-**Ответственность:** Конфигурация
+**Responsibility:** Configuration
 
-- Settings (окружения, секреты)
+- Settings (environments, secrets)
 - Logging setup
 - Constants
 
 ### Utils Layer (`utils/`)
 
-**Ответственность:** Вспомогательные функции
+**Responsibility:** Helper functions
 
-- Генераторы данных
-- Хелперы
+- Data generators
+- Helpers
 
-## Поток данных
+## Data Flow
 
 ```
 HTTP Request
     ↓
-API Route (валидация)
+API Route (validation)
     ↓
-Service (бизнес-логика)
+Service (business logic)
     ↓
-Service (обработка)
+Service (processing)
     ↓
-API Route (форматирование)
+API Route (formatting)
     ↓
 HTTP Response
 ```
 
-## Принципы
+## Principles
 
-1. **Separation of Concerns** - каждый слой свою задачу
-2. **Dependency Injection** - services как синглтоны
-3. **Single Responsibility** - один модуль = одна задача
-4. **Type Safety** - type hints везде
+1. **Separation of Concerns** - each layer has its own task
+2. **Dependency Injection** - services as singletons
+3. **Single Responsibility** - one module = one task
+4. **Type Safety** - type hints everywhere
 
-## Добавление endpoint
+## Adding an Endpoint
 
-1. Создать schema в `schemas/`
-2. Создать/использовать service в `services/`
-3. Создать route в `api/routes/`
-4. Зарегистрировать в `main.py`
+1. Create schema in `schemas/`
+2. Create/use service in `services/`
+3. Create route in `api/routes/`
+4. Register in `main.py`
 
 ```python
 # 1. Schema
@@ -112,14 +112,14 @@ app.include_router(my_router)
 ## Best Practices
 
 **Routes:**
-- Тонкие контроллеры
-- Только HTTP concerns
-- Делегируйте в services
+- Thin controllers
+- Only HTTP concerns
+- Delegate to services
 
 **Services:**
-- Без HTTP зависимостей
-- Тестируемые
-- Чистая бизнес-логика
+- No HTTP dependencies
+- Testable
+- Pure business logic
 
 **Schemas:**
 - Immutable DTOs
