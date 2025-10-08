@@ -28,10 +28,19 @@ class SecretsConfig(BaseSettings):
     anthropic_api_key: SecretStr | None = Field(
         default=None, description="Anthropic API key for Claude"
     )
+    google_api_key: SecretStr | None = Field(
+        default=None, description="Google API key (for Places, Maps, etc)"
+    )
 
     # Authentication secrets
     jwt_secret_key: SecretStr | None = Field(default=None, description="JWT signing secret key")
     jwt_algorithm: str = Field(default="HS256", description="JWT signing algorithm")
+
+    # OAuth2 secrets
+    google_client_id: SecretStr | None = Field(default=None, description="Google OAuth2 Client ID")
+    google_client_secret: SecretStr | None = Field(
+        default=None, description="Google OAuth2 Client Secret"
+    )
 
     # External service secrets (for future use)
     redis_url: SecretStr | None = Field(default=None, description="Redis connection URL")
@@ -64,3 +73,31 @@ class SecretsConfig(BaseSettings):
     def has_database_url(self) -> bool:
         """Check if database URL is configured"""
         return self.database_url is not None
+
+    def get_google_client_id(self) -> str | None:
+        """Get Google OAuth2 Client ID as plain string"""
+        return self.google_client_id.get_secret_value() if self.google_client_id else None
+
+    def get_google_client_secret(self) -> str | None:
+        """Get Google OAuth2 Client Secret as plain string"""
+        return self.google_client_secret.get_secret_value() if self.google_client_secret else None
+
+    def has_google_oauth(self) -> bool:
+        """Check if Google OAuth2 is configured"""
+        return self.google_client_id is not None and self.google_client_secret is not None
+
+    def get_openai_api_key(self) -> str | None:
+        """Get OpenAI API key as plain string"""
+        return self.openai_api_key.get_secret_value() if self.openai_api_key else None
+
+    def get_google_api_key(self) -> str | None:
+        """Get Google API key as plain string"""
+        return self.google_api_key.get_secret_value() if self.google_api_key else None
+
+    def has_openai_key(self) -> bool:
+        """Check if OpenAI API key is configured"""
+        return self.openai_api_key is not None
+
+    def has_google_api_key(self) -> bool:
+        """Check if Google API key is configured"""
+        return self.google_api_key is not None

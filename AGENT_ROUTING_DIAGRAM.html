@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Routing Blueprint - City Helper AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .diagram-wrapper {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid #cbd5e0;
+        }
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #bee3f8;
+            border-left: 4px solid #3182ce;
+            border-radius: 5px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #2c5282;
+        }
+        .instructions code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        @media print {
+            body {
+                background: white;
+            }
+            .instructions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Agent Routing Blueprint</h1>
+        <p class="subtitle">City Helper AI - Decision Tree for Request Routing</p>
+
+        <div class="diagram-wrapper">
+            <div class="mermaid">
+flowchart TD
+    Start([👤 User Message<br/>Received]) --> HasPrevious{📋 Has Previous<br/>Context?<br/>━━━━━━<br/>previous_request<br/>previous_response}
+
+    HasPrevious -->|❌ NO<br/>First message| NewRequest[🆕 NEW REQUEST<br/>━━━━━━<br/>is_new_request TRUE<br/>operation_type new<br/>use_previous_context FALSE]
+
+    HasPrevious -->|✅ YES<br/>Has context| Agent[🤖 AI AGENT<br/>Analyzes Context<br/>━━━━━━<br/>OpenAI gpt-4o-mini<br/>with structured output]
+
+    Agent --> BothCheck{🔍 Context Analysis<br/>━━━━━━<br/>location_changed?<br/>place_type_changed?}
+
+    BothCheck -->|Both Changed<br/>Paris parks to Munich bars| NewRequest
+
+    BothCheck -->|Location OR Type Same<br/>Munich bars to Munich bars| ModDecision{📝 Modification<br/>Detection<br/>━━━━━━<br/>Agent analyzes<br/>user intent}
+
+    ModDecision -->|add more<br/>one more<br/>add 2| AddOp[➕ ADD OPERATION<br/>━━━━━━<br/>operation_type add<br/>use_previous_context TRUE<br/>count_adjustment plus N<br/>━━━━━━<br/>count equals previous plus N]
+
+    ModDecision -->|remove last<br/>delete 2<br/>remove| RemoveOp[➖ REMOVE OPERATION<br/>━━━━━━<br/>operation_type remove<br/>use_previous_context TRUE<br/>count_adjustment minus N<br/>━━━━━━<br/>count max of 1 or previous minus N]
+
+    ModDecision -->|last one is far<br/>change last<br/>4th is bad| ReplaceLast[🔄 REPLACE LAST<br/>━━━━━━<br/>operation_type replace_last<br/>use_previous_context TRUE<br/>━━━━━━<br/>count equals previous<br/>Keep all except last]
+
+    ModDecision -->|all are far<br/>not in center<br/>show other| ReplaceAll[🔄 REPLACE ALL<br/>━━━━━━<br/>operation_type replace_all<br/>use_previous_context FALSE<br/>━━━━━━<br/>count equals previous<br/>Generate new list]
+
+    ModDecision -->|make it 3<br/>adjust time<br/>different theme| Refine[⚙️ REFINE<br/>━━━━━━<br/>operation_type refine<br/>use_previous_context TRUE<br/>━━━━━━<br/>count from classification]
+
+    NewRequest --> Classify[🧠 CLASSIFY QUERY<br/>━━━━━━<br/>Extract location place_type<br/>count theme travel_mode]
+    AddOp --> Suggest
+    RemoveOp --> Suggest
+    ReplaceLast --> Suggest
+    ReplaceAll --> Suggest
+    Refine --> Classify
+
+    Classify --> Suggest[💡 SUGGEST PLACES<br/>━━━━━━<br/>OpenAI generates<br/>place suggestions<br/>with context]
+
+    Suggest --> Enrich[🌍 ENRICH with Google Places<br/>━━━━━━<br/>Search by name plus city<br/>Get coordinates rating<br/>Get address photos<br/>Verify city match]
+
+    Enrich --> CityCheck{✅ City Match?<br/>━━━━━━<br/>Check address<br/>contains city name}
+
+    CityCheck -->|❌ NO<br/>Wrong city| Skip[⏭️ SKIP PLACE<br/>Log warning]
+    CityCheck -->|✅ YES<br/>Correct city| CountCheck
+
+    Skip --> CountCheck{🔢 Found enough?<br/>━━━━━━<br/>enriched count<br/>equals requested count?}
+
+    CountCheck -->|❌ NO<br/>Missing places| Retry[🔄 RETRY<br/>━━━━━━<br/>Request missing count<br/>Exclude already tried<br/>OpenAI API call]
+
+    Retry --> Enrich
+
+    CountCheck -->|✅ YES<br/>Got enough| Optimize[🗺️ OPTIMIZE ROUTE<br/>━━━━━━<br/>Greedy nearest-neighbor<br/>algorithm]
+
+    Optimize --> MapGen[🗺️ GENERATE MAP DATA<br/>━━━━━━<br/>Create waypoints<br/>Generate Directions URLs<br/>Build segments<br/>Calculate travel time]
+
+    MapGen --> Response([📤 RESPONSE<br/>━━━━━━<br/>Text plus MapData<br/>to User])
+
+    style NewRequest fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style AddOp fill:#c8e6c9,stroke:#388e3c,stroke-width:3px
+    style RemoveOp fill:#ffcdd2,stroke:#d32f2f,stroke-width:3px
+    style ReplaceLast fill:#ffe0b2,stroke:#f57c00,stroke-width:3px
+    style ReplaceAll fill:#f8bbd0,stroke:#c2185b,stroke-width:3px
+    style Refine fill:#d1c4e9,stroke:#512da8,stroke-width:3px
+    style Agent fill:#fff9c4,stroke:#f9a825,stroke-width:3px
+    style Start fill:#b2dfdb,stroke:#00796b,stroke-width:3px
+    style Response fill:#b2dfdb,stroke:#00796b,stroke-width:3px
+    style HasPrevious fill:#fff,stroke:#333,stroke-width:2px
+    style BothCheck fill:#fff,stroke:#333,stroke-width:2px
+    style ModDecision fill:#fff,stroke:#333,stroke-width:2px
+    style CityCheck fill:#fff,stroke:#333,stroke-width:2px
+    style CountCheck fill:#fff,stroke:#333,stroke-width:2px
+    style Classify fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style Suggest fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style Enrich fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    style Optimize fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    style MapGen fill:#b3e5fc,stroke:#0288d1,stroke-width:2px
+    style Skip fill:#ffccbc,stroke:#e64a19,stroke-width:2px
+    style Retry fill:#fff59d,stroke:#f9a825,stroke-width:3px
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e3f2fd;"></div>
+                <span><strong>New Request</strong> - Completely new query</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #c8e6c9;"></div>
+                <span><strong>Add</strong> - Add more places</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ffcdd2;"></div>
+                <span><strong>Remove</strong> - Remove places</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ffe0b2;"></div>
+                <span><strong>Replace Last</strong> - Change last item</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f8bbd0;"></div>
+                <span><strong>Replace All</strong> - Replace entire list</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #d1c4e9;"></div>
+                <span><strong>Refine</strong> - Adjust parameters</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fff9c4;"></div>
+                <span><strong>AI Agent</strong> - OpenAI decision point</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e1bee7;"></div>
+                <span><strong>AI Processing</strong> - OpenAI API calls</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #b3e5fc;"></div>
+                <span><strong>External API</strong> - Google Places/Maps</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fff59d;"></div>
+                <span><strong>Retry Logic</strong> - Re-request missing places</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📸 How to Save as Image</h3>
+            <p><strong>Option 1: Screenshot (Quick)</strong></p>
+            <ul>
+                <li><strong>macOS:</strong> Press <code>Cmd + Shift + 4</code>, then drag to select diagram area</li>
+                <li><strong>Windows:</strong> Press <code>Win + Shift + S</code>, then select area</li>
+            </ul>
+
+            <p><strong>Option 2: High-Quality PNG/SVG (Recommended)</strong></p>
+            <ol>
+                <li>Install Mermaid CLI: <code>npm install -g @mermaid-js/mermaid-cli</code></li>
+                <li>Generate PNG: <code>mmdc -i AGENT_ROUTING_BLUEPRINT.md -o routing-diagram.png -w 2000</code></li>
+                <li>Generate SVG: <code>mmdc -i AGENT_ROUTING_BLUEPRINT.md -o routing-diagram.svg</code></li>
+            </ol>
+
+            <p><strong>Option 3: Right-click → Print → Save as PDF</strong></p>
+
+            <p><strong>📊 Test Coverage:</strong> All 12 branches are covered by integration tests in <code>tests/integration/test_agent_routing.py</code></p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            }
+        });
+    </script>
+</body>
+</html>

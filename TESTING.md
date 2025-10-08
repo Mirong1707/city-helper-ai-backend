@@ -1,8 +1,47 @@
 # Testing
 
-Тестирование backend API.
+Testing guide for City Helper AI Backend.
 
-## Быстрая проверка
+## Automated Tests
+
+### Quick Start
+
+```bash
+# Run unit tests only (fast, no API calls)
+make test-unit
+
+# Run integration tests (includes OpenAI API calls, ~$0.03)
+make test-integration
+
+# Run all tests
+make test-all
+```
+
+### Full Documentation
+
+- **[tests/README.md](tests/README.md)** - Complete testing guide
+- **[AGENT_ROUTING_BLUEPRINT.md](AGENT_ROUTING_BLUEPRINT.md)** - Agent routing decision tree with Mermaid diagram
+- **[TESTING_QUICK_REFERENCE.md](TESTING_QUICK_REFERENCE.md)** - Quick reference for common testing tasks
+
+### Test Coverage
+
+```
+✅ Agent Routing (12 tests)
+   ├─ NEW REQUEST detection (2 tests)
+   ├─ ADD operations (2 tests)
+   ├─ REMOVE operations (1 test)
+   ├─ REPLACE_LAST operations (1 test)
+   ├─ REPLACE_ALL operations (2 tests)
+   ├─ REFINE operations (1 test)
+   ├─ Edge cases (2 tests)
+   └─ Reasoning quality (1 test)
+
+Time: ~53s | Cost: ~$0.03
+```
+
+## Manual Testing
+
+### Quick Health Check
 
 ```bash
 # Запуск

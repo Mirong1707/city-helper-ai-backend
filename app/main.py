@@ -65,15 +65,21 @@ def create_app() -> FastAPI:
             client_ip=request.client.host if request.client else None,
         )
 
-        logger.debug("request_started")
+        # Request lifecycle logging removed for cleaner logs
+        # Business logic logs are more important
 
         try:
             response = await call_next(request)
-            logger.info(
-                "request_completed",
-                status_code=response.status_code,
-                duration_ms=None,  # FastAPI timing is handled by logfire
-            )
+            # Only log if there's an error status (excluding expected 404s)
+            # Ignore 404 errors for chat-sessions (auto-save is not critical)
+            if response.status_code >= 400 and not (
+                response.status_code == 404 and "/chat-sessions/" in request.url.path
+            ):
+                logger.warning(
+                    "request_completed_with_error",
+                    status_code=response.status_code,
+                    path=request.url.path,
+                )
             return response
         except Exception as exc:
             logger.exception("request_failed", error=str(exc))

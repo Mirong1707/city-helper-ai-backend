@@ -1,4 +1,4 @@
-.PHONY: lint format check run clean
+.PHONY: lint format check run clean test test-unit test-integration test-all
 
 # Lint code
 lint:
@@ -28,6 +28,33 @@ clean:
 	find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+
+# Testing
+test:
+	@echo "⚠️  This runs ALL tests including OpenAI API calls (~\$$0.03)"
+	@echo "Use 'make test-unit' to skip OpenAI tests"
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	echo; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		pytest tests/ -v; \
+	fi
+
+test-unit:
+	@echo "🧪 Running unit tests (no OpenAI calls)..."
+	pytest tests/ -v -m "not openai"
+
+test-integration:
+	@echo "🌐 Running integration tests (includes OpenAI API calls)..."
+	@echo "⚠️  Cost: ~\$$0.03 for full suite"
+	pytest tests/integration/ -v -m "openai"
+
+test-all:
+	@echo "🚀 Running ALL tests (unit + integration)..."
+	pytest tests/ -v
+
+test-coverage:
+	@echo "📊 Running tests with coverage report..."
+	pytest tests/ -v --cov=app --cov-report=html --cov-report=term
 
 # Pre-commit hooks
 install-hooks:
@@ -122,6 +149,13 @@ help:
 	@echo "Development:"
 	@echo "  make run               - Start server (local)"
 	@echo "  make clean             - Clean cache files"
+	@echo ""
+	@echo "Testing:"
+	@echo "  make test              - Run all tests (with confirmation)"
+	@echo "  make test-unit         - Run only unit tests (no API calls)"
+	@echo "  make test-integration  - Run integration tests (OpenAI API calls)"
+	@echo "  make test-all          - Run all tests without confirmation"
+	@echo "  make test-coverage     - Run tests with coverage report"
 	@echo ""
 	@echo "Pre-commit:"
 	@echo "  make install-hooks     - Install pre-commit hooks"
